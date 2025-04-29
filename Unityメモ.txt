@@ -1,0 +1,2 @@
+Particle Systemのデフォルトがなぜか横向きなので、
+    Shape Rotation X -90 にしないといけない
