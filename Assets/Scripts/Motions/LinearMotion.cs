@@ -4,13 +4,21 @@ public class LinearMotion : MonoBehaviour
 {
     [SerializeField]
     private Vector3 linearVelocity;
+
+    /// <summary>
+    /// trueの場合はオブジェクトの方向に応じて移動する
+    /// (linearVelocityを回転させる)
+    /// </summary>
+    [SerializeField]
+    private bool goForward;
     
-    // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
     {
         var rigidbody = GetComponent<Rigidbody>();
-        rigidbody.linearVelocity = linearVelocity;
-    }
-
-    
+        rigidbody.linearVelocity = goForward ? 
+            Quaternion.FromToRotation(linearVelocity, transform.forward) * linearVelocity:
+            linearVelocity;
+        
+        Debug.Log(rigidbody.linearVelocity);
+    } 
 }
