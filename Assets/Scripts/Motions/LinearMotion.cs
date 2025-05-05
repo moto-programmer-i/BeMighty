@@ -1,5 +1,8 @@
 using UnityEngine;
 
+/// <summary>
+/// 直線移動
+/// </summary>
 public class LinearMotion : MonoBehaviour
 {
     [SerializeField]

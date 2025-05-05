@@ -1,10 +1,16 @@
 using UnityEngine;
 
+/// <summary>
+/// 魔法陣。魔法を出力する。
+/// </summary>
 public class MagicForm : MonoBehaviour
 {
     [SerializeField]
     private float delaySeconds;
 
+    /// <summary>
+    /// 魔法
+    /// </summary>
     [SerializeField]
     private GameObject prefab;
 
