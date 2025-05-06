@@ -21,7 +21,5 @@ public class LinearMotion : MonoBehaviour
         rigidbody.linearVelocity = goForward ? 
             Quaternion.FromToRotation(linearVelocity, transform.forward) * linearVelocity:
             linearVelocity;
-        
-        Debug.Log(rigidbody.linearVelocity);
     } 
 }
