@@ -78,3 +78,7 @@ crashlytics-build.properties
 
 # metaは必ず含める
 !*.meta
+
+# ライセンスのテキストは必ず含める
+# !OFL.txt # うまくいかない、後に調査する
+

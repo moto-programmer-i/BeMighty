@@ -1,0 +1,49 @@
+.hp-panel {
+    background-color: rgb(0, 0, 0);
+    flex-direction: row;
+    flex-shrink: 0;
+    flex-grow: 0;
+    flex-wrap: nowrap;
+    overflow: visible;
+    visibility: visible;
+    text-overflow: clip;
+    -unity-background-scale-mode: stretch-to-fill;
+    max-height: 100px;
+    max-width: 150px;
+}
+
+.hp-image {
+    flex-grow: 0;
+    background-image: url("project://database/Assets/Temps/sample-character-hp.png?fileID=2800000&guid=a73f046d696fd8d41a913779d3337392&type=3#sample-character-hp");
+    -unity-background-scale-mode: scale-to-fit;
+    width: 100px;
+    height: 100px;
+    flex-shrink: 0;
+}
+
+.hp-panel-side {
+    flex-grow: 1;
+    flex-shrink: 0;
+}
+
+.hp-line {
+    flex-grow: 1;
+    flex-shrink: 0;
+    -unity-text-align: upper-left;
+}
+
+.hp-label {
+    -unity-font-definition: url("project://database/Assets/ThirdParties/Fonts/Zen_Old_Mincho/ZenOldMincho-Regular%20SDF%201.asset?fileID=11400000&guid=f55710c4c04b7f949862925dea574021&type=2#ZenOldMincho-Regular SDF 1");
+    -unity-font-style: bold;
+    color: rgb(255, 255, 255);
+    font-size: 20px;
+}
+
+.hp {
+    overflow: hidden;
+    -unity-font-definition: url("project://database/Assets/ThirdParties/Fonts/Zen_Old_Mincho/ZenOldMincho-Regular%20SDF%201.asset?fileID=11400000&guid=f55710c4c04b7f949862925dea574021&type=2#ZenOldMincho-Regular SDF 1");
+    -unity-font-style: bold;
+    color: rgb(255, 255, 255);
+    font-size: 30px;
+    -unity-text-align: upper-right;
+}
