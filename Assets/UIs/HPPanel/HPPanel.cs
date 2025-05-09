@@ -4,7 +4,6 @@ using UnityEngine.UIElements;
 
 [UxmlElement]
 public partial class HPPanel : VisualElement {
-    const int DEFAULT_HP = 9;
     const string HP_LABEL = "HP";
 
     const string CLASS_NAME = "hp-panel";
@@ -13,6 +12,9 @@ public partial class HPPanel : VisualElement {
     const string CLASS_NAME_LINE = "hp-line";
     const string CLASS_NAME_LABEL = "hp-label";
     const string CLASS_NAME_HP = "hp";
+
+    private Label hp;
+
     public HPPanel()
     {
         // バージョン6になってもここに書かなければいけない。何とかならんのか
@@ -28,7 +30,12 @@ public partial class HPPanel : VisualElement {
 
         line.Add(new Label(), CLASS_NAME_LABEL)
             .text = HP_LABEL;
-        line.Add(new Label(), CLASS_NAME_HP)
-            .text = DEFAULT_HP.ToString();
+        hp = line.Add(new Label(), CLASS_NAME_HP);
+        hp.text = Character.DEFAULT_HP.ToString();
+    }
+
+    public void SetHP(int hp)
+    {
+        this.hp.text = hp.ToString();
     }
 }

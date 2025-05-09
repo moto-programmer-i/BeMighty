@@ -2,6 +2,6 @@
     <Style src="project://database/Assets/UIs/HPArea.uss?fileID=7433441132597879392&amp;guid=26697ef9f9584054d92643e4c8f2ee95&amp;type=3#HPArea" />
     <Style src="project://database/Assets/UIs/HPPanel/HPPanel.uss?fileID=7433441132597879392&amp;guid=d345d887c9d856345bfd4c5be8a463c8&amp;type=3#HPPanel" />
     <ui:VisualElement name="hp-area" class="hp-area" style="flex-grow: 1;">
-        <HPPanel />
+        <HPPanel name="main" />
     </ui:VisualElement>
 </ui:UXML>

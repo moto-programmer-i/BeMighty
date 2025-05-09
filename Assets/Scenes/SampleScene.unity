@@ -501,6 +501,7 @@ GameObject:
   m_Component:
   - component: {fileID: 448915068}
   - component: {fileID: 448915067}
+  - component: {fileID: 448915069}
   m_Layer: 5
   m_Name: HPArea
   m_TagString: Untagged
@@ -542,6 +543,19 @@ Transform:
   m_Children: []
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &448915069
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 448915066}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 34851aa316c64714db4c6d53c29f03a5, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  hpArea: {fileID: 448915067}
 --- !u!1001 &523833667
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -748,6 +762,9 @@ PrefabInstance:
     - targetCorrespondingSourceObject: {fileID: 4416926081852918481, guid: 64dce48905ffd9b4293e595fa6941544, type: 3}
       insertIndex: 3
       addedObject: {fileID: 1197774866}
+    - targetCorrespondingSourceObject: {fileID: 4416926081852918481, guid: 64dce48905ffd9b4293e595fa6941544, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 1197774867}
   m_SourcePrefab: {fileID: 100100000, guid: 64dce48905ffd9b4293e595fa6941544, type: 3}
 --- !u!4 &1112843812 stripped
 Transform:
@@ -769,6 +786,7 @@ GameObject:
   m_Component:
   - component: {fileID: 1180162614}
   - component: {fileID: 1180162613}
+  - component: {fileID: 1180162615}
   m_Layer: 0
   m_Name: Instances
   m_TagString: Untagged
@@ -804,6 +822,20 @@ Transform:
   m_Children: []
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &1180162615
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1180162612}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 2130a3771c986ec4c8ba9c63e4c32e92, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  main: {fileID: 1197774867}
+  hPArea: {fileID: 448915069}
 --- !u!1 &1197774850 stripped
 GameObject:
   m_CorrespondingSourceObject: {fileID: 4416926081852918481, guid: 64dce48905ffd9b4293e595fa6941544, type: 3}
@@ -850,6 +882,20 @@ MonoBehaviour:
   CameraAngleOverride: 0
   LockCameraPosition: 0
   SprintDefault: 1
+--- !u!114 &1197774867
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1197774850}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: df11fdb8ab842d74aaf4e5a34f004977, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  <Name>k__BackingField: "\u706F\u8F1D"
+  <HP>k__BackingField: 3
 --- !u!1 &1318724731
 GameObject:
   m_ObjectHideFlags: 0

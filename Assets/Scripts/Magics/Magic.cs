@@ -2,6 +2,8 @@ using UnityEngine;
 
 public class Magic : MonoBehaviour
 {
+    public const string TAG_NAME = "Magic";
+    
     [field:SerializeField]
     public MagicType Type {get; private set;}
 
