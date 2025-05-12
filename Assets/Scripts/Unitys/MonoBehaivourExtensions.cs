@@ -24,9 +24,9 @@ public static class MonoBehaivourExtensions
                 await Awaitable.WaitForSecondsAsync(seconds, instance.destroyCancellationToken);
             }
         }
-        // 終了時にここにくる
+        // 終了時に例外で飛んでくるので無視
         catch(OperationCanceledException e) {
-            Debug.LogException(e);
+            _ = e;
         }
     }
 }
