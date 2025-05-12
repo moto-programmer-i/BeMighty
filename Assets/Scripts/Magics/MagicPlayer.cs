@@ -3,7 +3,7 @@ using System.Linq;
 using UnityEngine;
 using UnityEngine.InputSystem;
 
-public class MagicFormFactory : MonoBehaviour
+public class MagicPlayer : MonoBehaviour
 {
     [SerializeField]
     private float cooltime = 1.0f;

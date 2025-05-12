@@ -1,3 +1,4 @@
+using System;
 using UnityEngine;
 
 /// <summary>
@@ -18,8 +19,20 @@ public class LinearMotion : MonoBehaviour
     void Start()
     {
         var rigidbody = GetComponent<Rigidbody>();
-        rigidbody.linearVelocity = goForward ? 
-            Quaternion.FromToRotation(linearVelocity, transform.forward) * linearVelocity:
-            linearVelocity;
-    } 
+        if (goForward) {
+            linearVelocity = Quaternion.FromToRotation(linearVelocity, transform.forward) * linearVelocity;
+        }
+
+        linearVelocity /= Time.fixedDeltaTime;
+        linearVelocity *= rigidbody.mass;
+        
+        rigidbody.AddForce(linearVelocity);
+        
+        
+        // 魔法がぶつかった後の挙動がおかしくなるので、やっぱりダメ
+        // var rigidbody = GetComponent<Rigidbody>();
+        // rigidbody.linearVelocity = goForward ? 
+        //     Quaternion.FromToRotation(linearVelocity, transform.forward) * linearVelocity:
+        //     linearVelocity;
+    }
 }
