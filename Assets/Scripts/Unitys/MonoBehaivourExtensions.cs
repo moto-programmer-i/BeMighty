@@ -12,12 +12,16 @@ public static class MonoBehaivourExtensions
     /// <param name="seconds">待ち時間</param>
     /// <param name="action"></param>
     public static void Loop(this MonoBehaviour instance, float seconds, Action action)
-    {
+    {        
         StartLoop(instance, seconds, action);
     }
 
     private static async void StartLoop(MonoBehaviour instance, float seconds, Action action)
     {
+        if (seconds <= 0) {
+            throw new ArgumentException($"ループの秒数は0を超えている必要があります\nseconds: {seconds}");
+        }
+        
         try {
             while(instance != null && instance.isActiveAndEnabled && !instance.IsDestroyed()) {
                 action();
