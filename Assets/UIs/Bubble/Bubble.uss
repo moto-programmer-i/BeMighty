@@ -1,0 +1,70 @@
+.bubble {
+    flex-grow: 0;
+    flex-direction: column;
+}
+
+.name-wrapper {
+    flex-direction: row;
+}
+
+.name {
+    flex-shrink: 1;
+    background-color: rgb(208, 215, 215);
+    margin-top: 0;
+    margin-right: 0;
+    margin-bottom: 0;
+    margin-left: 25px;
+    border-top-width: 1px;
+    border-right-width: 1px;
+    border-bottom-width: 1px;
+    border-left-width: 1px;
+    border-left-color: rgb(0, 0, 0);
+    border-right-color: rgb(0, 0, 0);
+    border-top-color: rgb(0, 0, 0);
+    border-bottom-color: rgb(0, 0, 0);
+    padding-top: 1px;
+    padding-left: 5px;
+    padding-bottom: 1px;
+    padding-right: 5px;
+    font-size: 20px;
+    color: rgb(0, 0, 0);
+    -unity-text-outline-width: 0;
+    text-shadow: 1px 1px 0 rgb(255, 255, 255);
+    -unity-font-style: normal;
+    border-top-left-radius: 6px;
+    border-top-right-radius: 6px;
+    border-bottom-right-radius: 6px;
+    border-bottom-left-radius: 6px;
+}
+
+.text-wrapper {
+    flex-grow: 1;
+    flex-direction: row;
+}
+
+.text {
+    background-color: rgb(255, 254, 250);
+    margin-top: 0;
+    margin-right: 0;
+    margin-bottom: 0;
+    margin-left: 0;
+    border-top-width: 1px;
+    border-right-width: 1px;
+    border-bottom-width: 1px;
+    border-left-width: 1px;
+    border-left-color: rgb(0, 0, 0);
+    border-right-color: rgb(0, 0, 0);
+    border-top-color: rgb(0, 0, 0);
+    border-bottom-color: rgb(0, 0, 0);
+    -unity-text-outline-width: 1px;
+    -unity-text-outline-color: rgb(0, 0, 0);
+    font-size: 35px;
+    border-top-left-radius: 30px;
+    border-top-right-radius: 30px;
+    border-bottom-right-radius: 30px;
+    border-bottom-left-radius: 30px;
+    padding-top: 0;
+    padding-bottom: 0;
+    padding-left: 10px;
+    padding-right: 10px;
+}
