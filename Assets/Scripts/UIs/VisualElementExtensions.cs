@@ -17,4 +17,14 @@ public static class VisualElementExtensions
         
         return child;
     }
+
+    /// <summary>
+    /// VisualElement.style.displayを設定
+    /// </summary>
+    /// <param name="instance"></param>
+    /// <param name="display">true: Flex, false:None</param>
+    public static void SetDisplay(this VisualElement instance, bool display)
+    {
+        instance.style.display = display ? DisplayStyle.Flex : DisplayStyle.None;
+    }
 }

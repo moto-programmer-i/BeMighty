@@ -3,7 +3,7 @@
     <Style src="project://database/Assets/UIs/Common.uss?fileID=7433441132597879392&amp;guid=e987f65f39c067743894ff0c39627f1f&amp;type=3#Common" />
     <ui:VisualElement name="bubble" class="bubble">
         <ui:VisualElement name="name-wrapper" class="name-wrapper">
-            <ui:Label text="灯輝" name="name" class="name" />
+            <ui:Label text="灯輝" name="name" class="name" style="position: relative;" />
         </ui:VisualElement>
         <ui:VisualElement name="text-wrapper" class="text-wrapper">
             <ui:Label text="あ～～～～～&#10;お湯がうまいねぇ～" name="text" class="text" />

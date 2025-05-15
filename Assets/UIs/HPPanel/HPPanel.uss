@@ -33,7 +33,6 @@
 }
 
 .hp-label {
-    -unity-font-definition: url("project://database/Assets/ThirdParties/Fonts/Zen_Old_Mincho/ZenOldMincho-Regular%20SDF%201.asset?fileID=11400000&guid=f55710c4c04b7f949862925dea574021&type=2#ZenOldMincho-Regular SDF 1");
     -unity-font-style: bold;
     color: rgb(255, 255, 255);
     font-size: 20px;
@@ -41,7 +40,6 @@
 
 .hp {
     overflow: hidden;
-    -unity-font-definition: url("project://database/Assets/ThirdParties/Fonts/Zen_Old_Mincho/ZenOldMincho-Regular%20SDF%201.asset?fileID=11400000&guid=f55710c4c04b7f949862925dea574021&type=2#ZenOldMincho-Regular SDF 1");
     -unity-font-style: bold;
     color: rgb(255, 255, 255);
     font-size: 30px;

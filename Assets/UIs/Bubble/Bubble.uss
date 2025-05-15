@@ -9,7 +9,7 @@
 
 .name {
     flex-shrink: 1;
-    background-color: rgb(208, 215, 215);
+    background-color: rgb(0, 0, 0);
     margin-top: 0;
     margin-right: 0;
     margin-bottom: 0;
@@ -26,15 +26,15 @@
     padding-left: 5px;
     padding-bottom: 1px;
     padding-right: 5px;
-    font-size: 20px;
-    color: rgb(0, 0, 0);
+    color: rgb(255, 255, 255);
     -unity-text-outline-width: 0;
-    text-shadow: 1px 1px 0 rgb(255, 255, 255);
-    -unity-font-style: normal;
+    text-shadow: 1px 1px 0 rgb(93, 93, 93);
+    -unity-font-style: bold;
     border-top-left-radius: 6px;
     border-top-right-radius: 6px;
     border-bottom-right-radius: 6px;
     border-bottom-left-radius: 6px;
+    font-size: 30px;
 }
 
 .text-wrapper {
