@@ -1,5 +1,6 @@
 <ui:UXML xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:ui="UnityEngine.UIElements" xmlns:uie="UnityEditor.UIElements" noNamespaceSchemaLocation="../../UIElementsSchema/UIElements.xsd" editor-extension-mode="False">
     <Style src="project://database/Assets/UIs/Common.uss?fileID=7433441132597879392&amp;guid=e987f65f39c067743894ff0c39627f1f&amp;type=3#Common" />
     <Style src="project://database/Assets/UIs/Bubble/Bubble.uss?fileID=7433441132597879392&amp;guid=6e73210560463894dbf2507d7e102135&amp;type=3#Bubble" />
-    <Bubble name="main-bubble" />
+    <Bubble name="main-bubble" enabled="true" style="display: none;" />
+    <ui:VisualElement name="origin" style="flex-grow: 1; background-color: rgb(255, 0, 0); width: 50px; height: 50px; position: absolute; transform-origin: center; left: 0; top: 540px;" />
 </ui:UXML>

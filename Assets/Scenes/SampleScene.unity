@@ -684,6 +684,9 @@ MonoBehaviour:
   talk: {fileID: 739941366}
   bubbleName: "\u706F\u8F1D"
   bubbleText: "\u3042\uFF5E\uFF5E\uFF5E\uFF5E\uFF5E\n\u304A\u6E6F\u304C\u3046\u307E\u3044\u306D\u3047\uFF5E"
+  mainCamera: {fileID: 1460534614}
+  mainSpeaker: {fileID: 1815350779}
+  stickPeriod: 0.5
 --- !u!114 &739941366
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1157,6 +1160,10 @@ PrefabInstance:
     m_TransformParent: {fileID: 0}
     m_Modifications:
     - target: {fileID: 8944336655422409496, guid: f6d148d888ffbf54b9afe9936dfaec1f, type: 3}
+      propertyPath: field of view
+      value: 40
+      objectReference: {fileID: 0}
+    - target: {fileID: 8944336655422409496, guid: f6d148d888ffbf54b9afe9936dfaec1f, type: 3}
       propertyPath: far clip plane
       value: 500
       objectReference: {fileID: 0}
@@ -1265,6 +1272,11 @@ MonoBehaviour:
     m_MipBias: 0
     m_VarianceClampScale: 0.9
     m_ContrastAdaptiveSharpening: 0
+--- !u!20 &1460534614 stripped
+Camera:
+  m_CorrespondingSourceObject: {fileID: 8944336655422409496, guid: f6d148d888ffbf54b9afe9936dfaec1f, type: 3}
+  m_PrefabInstance: {fileID: 1460534609}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1 &1573606447
 GameObject:
   m_ObjectHideFlags: 0
@@ -1373,7 +1385,7 @@ Transform:
   m_GameObject: {fileID: 1573606447}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 3.7393813, y: 1.28, z: 7.1479115}
+  m_LocalPosition: {x: 17.39, y: 1.28, z: 2.97}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
@@ -1562,7 +1574,7 @@ Transform:
   m_GameObject: {fileID: 1815350775}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 18.14, y: 0.72, z: 14.62}
+  m_LocalPosition: {x: 3.57, y: 4.63, z: 7.61}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []

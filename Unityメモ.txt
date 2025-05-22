@@ -1,2 +1,6 @@
 Particle Systemのデフォルトがなぜか横向きなので、
     Shape Rotation X -90 にしないといけない
+
+The lower left pixel of the screen is (0,0). 
+The upper right pixel of the screen is (screen width in pixels - 1, screen height in pixels - 1).
+https://docs.unity3d.com/6000.1/Documentation/ScriptReference/Camera.WorldToScreenPoint.html
