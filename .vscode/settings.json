@@ -66,5 +66,8 @@
     "explorer.fileNesting.patterns": {
         "*.sln": "*.csproj",
     },
-    "dotnet.defaultSolution": "BeMighty.sln"
+    "dotnet.defaultSolution": "BeMighty.sln",
+    "editor.semanticTokenColorCustomizations": {
+        "[Default Dark Modern]": {"rules": {"struct": "#ffff00"}}
+    }
 }
