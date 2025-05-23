@@ -4,7 +4,6 @@ using UnityEngine.UIElements;
 
 public class Talk : MonoBehaviour
 {
-    const int SCREEN_MIN = 0;
     public const string MAIN_BUBBLE_NAME = "main-bubble";
     public const string ORIGIN_NAME = "origin";
     [SerializeField]
@@ -33,6 +32,8 @@ public class Talk : MonoBehaviour
 
     private VisualElement origin;
 
+    private PanelSettings panelSettings;
+
     void Start()
     {
         origin = talk.rootVisualElement.Q<VisualElement>(ORIGIN_NAME);
@@ -41,8 +42,6 @@ public class Talk : MonoBehaviour
         Main.SetText(bubbleText);
 
         StickBubble(mainSpeaker, mainCamera, stickPeriod);
-
-        // Debug.Log($"min:{MathF.Min(float.NaN, 0)}, max:{MathF.Max(float.NaN, Screen.height)}");
     }
 
     public void SetBubblePosition(Vector3 position, Camera camera)
@@ -52,6 +51,8 @@ public class Talk : MonoBehaviour
         // RuntimePanelUtils.CameraTransformWorldToPanelだとうまくいく
         var mainSpakerPosition = RuntimePanelUtils.CameraTransformWorldToPanel(talk.rootVisualElement.panel, position, mainCamera);
         origin.SetLeftTop(mainSpakerPosition);
+
+        // Debug.Log(origin.IsOffScreen() ? "外" : "内");
 
 
 

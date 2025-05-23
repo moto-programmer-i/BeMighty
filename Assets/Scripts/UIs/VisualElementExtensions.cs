@@ -61,4 +61,55 @@ public static class VisualElementExtensions
         instance.style.left = position.x;
         instance.style.top = position.y;
     }
+
+    public static float GetLeft(this VisualElement instance)
+    {
+        return instance.style.left.value.value;
+    }
+
+    public static float GetTop(this VisualElement instance)
+    {
+        return instance.style.top.value.value;
+    }
+    public static float GetRight(this VisualElement instance)
+    {
+        return instance.style.right.value.value;
+    }
+
+    public static float GetBottom(this VisualElement instance)
+    {
+        return instance.style.bottom.value.value;
+    }
+
+
+
+
+    /// <summary>
+    /// 画面外か
+    /// </summary>
+    /// <param name="instance">absoluteでLeft Topが設定されていることが前提</param>
+    /// <returns></returns>
+    public static bool IsOffScreen(this VisualElement instance)
+    {
+        var resolution = UIManager.GetResolution();
+
+        // absoluteでleft topが設定されていることが前提
+        // ほかの場合もうまく対処できるように要検討
+        float left = instance.GetLeft();
+        float top = instance.GetTop();
+
+        // Debug.Log($"pos {left}:{top}");
+
+        // 右と下は左上 + 大きさ
+        float right = instance.GetLeft() + instance.resolvedStyle.width;
+        float bottom = instance.GetTop() + instance.resolvedStyle.height;
+
+
+        return left >= resolution.X
+            || top >= resolution.Y
+            || right <= UIManager.SCREEN_MIN
+            || bottom <= UIManager.SCREEN_MIN
+        ;
+    }
 }
+

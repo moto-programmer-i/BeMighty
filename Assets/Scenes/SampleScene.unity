@@ -686,7 +686,7 @@ MonoBehaviour:
   bubbleText: "\u3042\uFF5E\uFF5E\uFF5E\uFF5E\uFF5E\n\u304A\u6E6F\u304C\u3046\u307E\u3044\u306D\u3047\uFF5E"
   mainCamera: {fileID: 1460534614}
   mainSpeaker: {fileID: 1815350779}
-  stickPeriod: 0.5
+  stickPeriod: 0.1
 --- !u!114 &739941366
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -890,6 +890,7 @@ GameObject:
   - component: {fileID: 1180162614}
   - component: {fileID: 1180162613}
   - component: {fileID: 1180162615}
+  - component: {fileID: 1180162616}
   m_Layer: 0
   m_Name: Instances
   m_TagString: Untagged
@@ -939,6 +940,19 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   main: {fileID: 1197774867}
   hPArea: {fileID: 448915069}
+--- !u!114 &1180162616
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1180162612}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 6792ec169b2d555499e5d7118ba191a8, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  talk: {fileID: 739941366}
 --- !u!1 &1197774850 stripped
 GameObject:
   m_CorrespondingSourceObject: {fileID: 4416926081852918481, guid: 64dce48905ffd9b4293e595fa6941544, type: 3}
