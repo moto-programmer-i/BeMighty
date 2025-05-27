@@ -21,15 +21,18 @@ public static class MonoBehaivourExtensions
         if (seconds <= 0) {
             throw new ArgumentException($"ループの秒数は0を超えている必要があります\nseconds: {seconds}");
         }
-        
-        try {
-            while(instance != null && instance.isActiveAndEnabled && !instance.IsDestroyed()) {
+
+        try
+        {
+            while (instance != null && instance.isActiveAndEnabled && !instance.IsDestroyed())
+            {
                 action();
                 await Awaitable.WaitForSecondsAsync(seconds, instance.destroyCancellationToken);
             }
         }
         // 終了時に例外で飛んでくるので無視
-        catch(OperationCanceledException e) {
+        catch (OperationCanceledException e)
+        {
             _ = e;
         }
     }

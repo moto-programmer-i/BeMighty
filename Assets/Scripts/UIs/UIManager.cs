@@ -22,11 +22,21 @@ public class UIManager
     {
         current = this;
         this.panelSettings = panelSettings;
-        referenceResolution = new (current.panelSettings.referenceResolution);
+        referenceResolution = new(current.panelSettings.referenceResolution);
     }
 
     public static Vector2IntData GetResolution()
     {
         return current.referenceResolution;
+    }
+
+    /// <summary>
+    /// 上からの座標を、下からのBottomに変換
+    /// </summary>
+    /// <param name="y"></param>
+    /// <returns></returns>
+    public static float ConvertToBottom(float y)
+    {
+        return current.referenceResolution.Y - y;
     }
 }

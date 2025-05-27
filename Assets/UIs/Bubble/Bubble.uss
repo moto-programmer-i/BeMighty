@@ -1,6 +1,7 @@
 .bubble {
     flex-grow: 0;
     flex-direction: column;
+    position: relative;
 }
 
 .name-wrapper {

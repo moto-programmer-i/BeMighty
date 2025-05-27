@@ -182,6 +182,37 @@ MonoBehaviour:
       m_Flags: 0
     m_Flags: 0
   magicForm: {fileID: 8222939311759185209, guid: 00e4061a69536e142ac2ece2307cde07, type: 3}
+--- !u!1 &127820582
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 127820583}
+  m_Layer: 0
+  m_Name: BubbleOrigin
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &127820583
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 127820582}
+  serializedVersion: 2
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalPosition: {x: 0, y: 1.399, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 1815350779}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &315621699
 GameObject:
   m_ObjectHideFlags: 0
@@ -685,8 +716,8 @@ MonoBehaviour:
   bubbleName: "\u706F\u8F1D"
   bubbleText: "\u3042\uFF5E\uFF5E\uFF5E\uFF5E\uFF5E\n\u304A\u6E6F\u304C\u3046\u307E\u3044\u306D\u3047\uFF5E"
   mainCamera: {fileID: 1460534614}
-  mainSpeaker: {fileID: 1815350779}
-  stickPeriod: 0.1
+  mainSpeaker: {fileID: 127820583}
+  stickPeriod: 1
 --- !u!114 &739941366
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1588,10 +1619,11 @@ Transform:
   m_GameObject: {fileID: 1815350775}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 3.57, y: 4.63, z: 7.61}
+  m_LocalPosition: {x: 3.57, y: 0.9, z: 7.61}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
-  m_Children: []
+  m_Children:
+  - {fileID: 127820583}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &1858854393
