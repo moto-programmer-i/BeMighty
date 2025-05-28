@@ -3,6 +3,8 @@
 // よい子は真似してはいけない。
 // 他の方法が見つかり次第修正が必要。
 
+// このクラスに関しては元のThirdPersonControllerのライセンスに従う
+
 
 using StarterAssets;
 using UnityEngine;
