@@ -3,33 +3,35 @@
 
 import std;
 import Glfw;
+import VulkanTutorial;
 
 constexpr uint32_t WIDTH = 800;
 constexpr uint32_t HEIGHT = 600;
 
 
 void run() {
-    std::cout << "nice module" << std::endl;
+    
+
+
 }
 
 
 int main()
-{    
-    // Glfw:WindowSettingsの変数と、Glfw:Windowの変数を同時に定義するとなぜかエラーになる
-    /*
-    Glfw:WindowSettings settings;
-    std::cout << settings.name << std::endl;
-    */
-
+{
     // ウィンドウの作成と同時に実行。わけた方が良いかは要検討
-    Glfw:Window myWindow{
+    Glfw::Window myWindow{
         {
             .width = WIDTH,
             .height = HEIGHT,
             .name = "vulkan"
-        },
-        run
+        }
     };
+
+    std::cout << "nice module" << std::endl;
+
+    HelloTriangleApplication tutorial{ &myWindow };
+
+    myWindow.wait_until_close();
 }
 
 
