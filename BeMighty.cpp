@@ -9,13 +9,6 @@ constexpr uint32_t WIDTH = 800;
 constexpr uint32_t HEIGHT = 600;
 
 
-void run() {
-    
-
-
-}
-
-
 int main()
 {
     // ウィンドウの作成と同時に実行。わけた方が良いかは要検討
@@ -27,9 +20,10 @@ int main()
         }
     };
 
-    std::cout << "nice module" << std::endl;
+    // std::cout << "nice module" << std::endl;
 
     HelloTriangleApplication tutorial{ &myWindow };
+    tutorial.run();
 
     myWindow.wait_until_close();
 }

@@ -1,7 +1,8 @@
 {
   "ExpandedNodes": [
-    ""
+    "",
+    "\\vulkan"
   ],
-  "SelectedNode": "\\BeMighty.sln",
+  "SelectedNode": "\\BeMighty.vcxproj.filters",
   "PreviewInSolutionExplorer": false
 }
