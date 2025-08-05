@@ -87,6 +87,7 @@ private:
         std::vector<char const*> requiredLayers;
         auto requiredExtensions = getRequiredExtensions();
 
+// できればここのifdefもなくしたいが、現状しょうがない
 #ifdef NDEBUG
 #else
         // デバッグ用の情報がcreateInstance時に必要
