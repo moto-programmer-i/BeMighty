@@ -2,6 +2,7 @@ export module Glfw:Window;
 import :WindowSettings;
 import std;
 
+#define GLFW_INCLUDE_VULKAN // REQUIRED only for GLFW CreateWindowSurface.
 #include <GLFW/glfw3.h>
 
 namespace Glfw {
