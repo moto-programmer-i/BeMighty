@@ -49,6 +49,7 @@ private:
 
     vk::raii::Context  context;
     vk::raii::Instance instance = nullptr;
+    vk::raii::SurfaceKHR             surface = nullptr;
 
 #ifdef NDEBUG
 #else
@@ -138,12 +139,20 @@ private:
     }
 
 
-    // vectorの値渡しがinlineで軽減されてほしい。
-    // 一応されなくても頻繁に呼び出す処理ではないので大丈夫なはず
-    inline std::vector<const char*> getRequiredExtensions() {
+    // ムーブが優先されるのでvectorは値渡しにならないはず
+    // https://zenn.dev/dec9ue/books/8c59757478a547/viewer/83003e
+    std::vector<const char*> getRequiredExtensions() {
         uint32_t glfwExtensionCount = 0;
         auto glfwExtensions = glfwGetRequiredInstanceExtensions(&glfwExtensionCount);
         std::vector extensions(glfwExtensions, glfwExtensions + glfwExtensionCount);
         return extensions;
+    }
+
+    void createSurface() {
+        VkSurfaceKHR       _surface;
+        if (glfwCreateWindowSurface(*instance, window->get_window(), nullptr, &_surface) != 0) {
+            throw std::runtime_error("failed to create window surface!");
+        }
+        surface = vk::raii::SurfaceKHR(instance, _surface);
     }
 };
