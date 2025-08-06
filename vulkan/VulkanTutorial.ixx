@@ -3,6 +3,8 @@
 // ‚È‚º‚©vulkan_hpp‚ÉŠÜ‚Ü‚ê‚Ä‚¢‚È‚¢
 // #include <vulkan/vulkan_core.h>
 
+#define GLFW_INCLUDE_VULKAN // REQUIRED only for GLFW CreateWindowSurface.
+
 
 export module VulkanTutorial;
 
@@ -49,7 +51,8 @@ private:
 
     vk::raii::Context  context;
     vk::raii::Instance instance = nullptr;
-    vk::raii::SurfaceKHR             surface = nullptr;
+    vk::raii::SurfaceKHR surface = nullptr;
+    std::unique_ptr <Vulkan::Device> device;
 
 #ifdef NDEBUG
 #else
@@ -60,6 +63,8 @@ private:
 
     void initVulkan() {
         createInstance();
+        createSurface();
+        device = std::make_unique<Vulkan::Device>(instance, surface);
     }
 
     void createInstance() {      

@@ -144,6 +144,7 @@
     <ClCompile Include="glfw_window\Glfw.ixx" />
     <ClCompile Include="glfw_window\Glfw.Window.ixx" />
     <ClCompile Include="glfw_window\Glfw.WindowSettings.ixx" />
+    <ClCompile Include="vulkan\Vulkan.Device.ixx" />
     <ClCompile Include="vulkan\Vulkan.ixx" />
     <ClCompile Include="vulkan\Vulkan.Validation.ixx" />
     <ClCompile Include="vulkan\VulkanTutorial.ixx" />
