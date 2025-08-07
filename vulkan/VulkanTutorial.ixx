@@ -30,8 +30,11 @@ public:
     static constexpr uint32_t APPLICATION_VERSION = 10000;
     static constexpr uint32_t ENGINE_VERSION = 10000;
 
-    HelloTriangleApplication(Glfw::Window* window) {
-        this->window = window;
+    HelloTriangleApplication(Glfw::Window& window)
+        // 参照はここで初期化しなければならない
+        // https://blog.hamayanhamayan.com/entry/2017/11/27/200917
+        : window(window) {
+        
     }
     void run() {
         std::cout << "vulkan3" << std::endl;
@@ -47,12 +50,13 @@ public:
 
 private:
     // 外部で管理されているウィンドウ。このクラス内では解放しないこと
-    Glfw::Window*  window;
+    Glfw::Window& window;
 
     vk::raii::Context  context;
     vk::raii::Instance instance = nullptr;
     vk::raii::SurfaceKHR surface = nullptr;
     std::unique_ptr <Vulkan::Device> device;
+    std::unique_ptr <Vulkan::SwapChain> swapChain;
 
 #ifdef NDEBUG
 #else
@@ -65,6 +69,8 @@ private:
         createInstance();
         createSurface();
         device = std::make_unique<Vulkan::Device>(instance, surface);
+        swapChain = std::make_unique<Vulkan::SwapChain>(*device.get(), surface, window);
+        // Vulkan::SwapChain swapChain{*device.get(), surface, window};
     }
 
     void createInstance() {      
@@ -155,7 +161,7 @@ private:
 
     void createSurface() {
         VkSurfaceKHR       _surface;
-        if (glfwCreateWindowSurface(*instance, window->get_window(), nullptr, &_surface) != 0) {
+        if (glfwCreateWindowSurface(*instance, &window.getWindow(), nullptr, &_surface) != 0) {
             throw std::runtime_error("failed to create window surface!");
         }
         surface = vk::raii::SurfaceKHR(instance, _surface);

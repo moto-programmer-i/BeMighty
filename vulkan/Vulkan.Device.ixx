@@ -36,6 +36,23 @@ namespace Vulkan {
 			createLogicalDevice(instance, surface, requiredDeviceExtension);
 		}
 
+        vk::raii::PhysicalDevice& getPhysicalDevice() {
+            return physicalDevice;
+        }
+
+        vk::raii::Device& getDevice() {
+            return device;
+        }
+
+        vk::raii::Queue& getQueue() {
+            return queue;
+        }
+        
+	private:
+		vk::raii::PhysicalDevice         physicalDevice = nullptr;
+		vk::raii::Device                 device = nullptr;
+        vk::raii::Queue                  queue = nullptr;
+
         void pickPhysicalDevice(vk::raii::Instance& instance, std::vector<const char*>& requiredDeviceExtension) {
             std::vector<vk::raii::PhysicalDevice> devices = instance.enumeratePhysicalDevices();
             const auto                            devIter = std::ranges::find_if(
@@ -116,9 +133,5 @@ namespace Vulkan {
             device = vk::raii::Device(physicalDevice, deviceCreateInfo);
             queue = vk::raii::Queue(device, queueIndex, 0);
         }
-	private:
-		vk::raii::PhysicalDevice         physicalDevice = nullptr;
-		vk::raii::Device                 device = nullptr;
-        vk::raii::Queue                  queue = nullptr;
 	};
 }

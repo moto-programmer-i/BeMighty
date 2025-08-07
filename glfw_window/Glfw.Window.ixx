@@ -1,5 +1,7 @@
 export module Glfw:Window;
+
 import :WindowSettings;
+import :Structs;
 import std;
 
 #define GLFW_INCLUDE_VULKAN // REQUIRED only for GLFW CreateWindowSurface.
@@ -26,13 +28,13 @@ namespace Glfw {
         }
 
         // ウィンドウを閉じるまで待機
-        void wait_until_close() {
+        void waitUntilClose() {
             while (!glfwWindowShouldClose(window)) {
                 glfwPollEvents();
             }
         }
 
-        WindowSettings get_settings() {
+        WindowSettings getSettings() {
             return this->settings;
         }
 
@@ -42,10 +44,21 @@ namespace Glfw {
             glfwTerminate();
         }
 
-        // ウィンドウへのポインタ。このインスタンス内で管理されるので、解放しないこと
-        GLFWwindow* get_window() {
-            return window;
+        // ウィンドウへの参照。このインスタンス内で管理されるので、解放しないこと
+        GLFWwindow& getWindow() {
+            return *window;
         }
+
+        Glfw::Size getFramebufferSize() {
+            Glfw::Size size{};
+            // CのコードはさすがにC++で隠す方針で
+            glfwGetFramebufferSize(window, &size.width, &size.height);
+
+            // 一応コピーはされないらしい
+            // https://cpprefjp.github.io/lang/cpp17/guaranteed_copy_elision.html
+            return size;
+        }
+        
 
     private:
         GLFWwindow* window = nullptr;
