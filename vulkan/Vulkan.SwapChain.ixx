@@ -10,6 +10,7 @@ import Glfw;
 
 import vulkan_hpp;
 import :Device;
+import :SwapChainSettings;
 
 // https://docs.vulkan.org/tutorial/latest/_attachments/06_swap_chain_creation.cpp
 // からコピペ
@@ -17,7 +18,9 @@ import :Device;
 namespace Vulkan {
 	export class SwapChain {
 	public:
-        SwapChain(Vulkan::Device& device, vk::raii::SurfaceKHR& surface, Glfw::Window& window)
+        SwapChain(Vulkan::Device& device, vk::raii::SurfaceKHR& surface, Glfw::Window& window,
+            Vulkan::SwapChainSettings settings = {}
+            )
             // 参照はここで初期化しなければならない
             // https://blog.hamayanhamayan.com/entry/2017/11/27/200917
             : window(window)
@@ -38,6 +41,8 @@ namespace Vulkan {
 
             swapChain = vk::raii::SwapchainKHR(device.getDevice(), swapChainCreateInfo);
             swapChainImages = swapChain.getImages();
+
+            createImageViews(device, settings);
         }
 
         static vk::Format chooseSwapSurfaceFormat(const std::vector<vk::SurfaceFormatKHR>& availableFormats) {
@@ -73,6 +78,31 @@ namespace Vulkan {
 		vk::Format swapChainImageFormat = vk::Format::eUndefined;
 		vk::Extent2D swapChainExtent;
 		std::vector<vk::raii::ImageView> swapChainImageViews;
+
+        void createImageViews(Vulkan::Device& device, Vulkan::SwapChainSettings& settings) {
+            swapChainImageViews.clear();
+
+            vk::ImageViewCreateInfo imageViewCreateInfo{
+                .viewType = vk::ImageViewType::e2D,
+                .format = swapChainImageFormat,
+                // https://registry.khronos.org/vulkan/specs/latest/man/html/VkImageSubresourceRange.html
+                .subresourceRange = { 
+                    .aspectMask = settings.aspectMask,
+                    .baseMipLevel = settings.baseMipLevel,
+                    .levelCount = settings.levelCount,
+                    .baseArrayLayer = settings.baseArrayLayer,
+                    .layerCount = settings.layerCount 
+                }
+            };
+
+            // &imageにするよう警告がでているが、どちらが正しいか不明
+            for (auto image : swapChainImages)
+            {
+                imageViewCreateInfo.image = image;
+                swapChainImageViews.emplace_back(device.getDevice(), imageViewCreateInfo);
+            }
+        }
+
 	};
 }
 

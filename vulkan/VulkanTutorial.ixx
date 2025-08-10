@@ -70,7 +70,6 @@ private:
         createSurface();
         device = std::make_unique<Vulkan::Device>(instance, surface);
         swapChain = std::make_unique<Vulkan::SwapChain>(*device.get(), surface, window);
-        // Vulkan::SwapChain swapChain{*device.get(), surface, window};
     }
 
     void createInstance() {      

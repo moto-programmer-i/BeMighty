@@ -150,6 +150,7 @@
     <ClCompile Include="vulkan\Vulkan.Device.ixx" />
     <ClCompile Include="vulkan\Vulkan.ixx" />
     <ClCompile Include="vulkan\Vulkan.SwapChain.ixx" />
+    <ClCompile Include="vulkan\Vulkan.SwapChainSettings.ixx" />
     <ClCompile Include="vulkan\Vulkan.Validation.ixx" />
     <ClCompile Include="vulkan\VulkanTutorial.ixx" />
   </ItemGroup>
