@@ -1,0 +1,10 @@
+■C++
+	文字列はstring_viewで扱う
+	https://yohhoy.hatenadiary.jp/entry/20171113/p1
+
+
+■コマンドプロンプト
+	プロジェクトのプロパティの%VULKAN_SDK%を使えたらベストだったが、方法不明
+	https://stackoverflow.com/a/5606276 を参考に設定。右クリックではなくツールバーから実行にした
+
+	バッチファイルのときだけ有効にしたい

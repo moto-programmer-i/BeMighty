@@ -18,9 +18,6 @@ import Vulkan;
 
 
 
-
-
-
 // Vulkanのチュートリアル
 // https://docs.vulkan.org/tutorial/latest/03_Drawing_a_triangle/00_Setup/00_Base_code.html
 export class HelloTriangleApplication {
@@ -29,6 +26,10 @@ public:
     // メジャー番号 マイナー番号（2桁）パッチ番号（２桁）を想定
     static constexpr uint32_t APPLICATION_VERSION = 10000;
     static constexpr uint32_t ENGINE_VERSION = 10000;
+
+    static constexpr std::string_view spvFilename = "D:/VisualStudio/repository/BeMighty/shaders/slang.spv";
+    static constexpr std::string_view vertName = "vertMain";
+    static constexpr std::string_view fragName = "fragMain";
 
     HelloTriangleApplication(Glfw::Window& window)
         // 参照はここで初期化しなければならない
@@ -57,6 +58,7 @@ private:
     vk::raii::SurfaceKHR surface = nullptr;
     std::unique_ptr <Vulkan::Device> device;
     std::unique_ptr <Vulkan::SwapChain> swapChain;
+    std::unique_ptr <Vulkan::GraphicsPipeline> graphicsPipeline;
 
 #ifdef NDEBUG
 #else
@@ -70,6 +72,10 @@ private:
         createSurface();
         device = std::make_unique<Vulkan::Device>(instance, surface);
         swapChain = std::make_unique<Vulkan::SwapChain>(*device.get(), surface, window);
+        graphicsPipeline = std::make_unique<Vulkan::GraphicsPipeline>(*(device.get()), spvFilename, vertName, fragName);
+
+
+
     }
 
     void createInstance() {      
