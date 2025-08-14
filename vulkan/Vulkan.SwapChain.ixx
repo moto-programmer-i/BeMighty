@@ -71,6 +71,10 @@ namespace Vulkan {
             };
         }
 
+        vk::Format& getSwapChainImageFormat() {
+            return swapChainImageFormat;
+        }
+
 	private:
         Glfw::Window& window;
 		vk::raii::SwapchainKHR swapChain = nullptr;

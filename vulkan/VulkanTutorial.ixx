@@ -72,7 +72,7 @@ private:
         createSurface();
         device = std::make_unique<Vulkan::Device>(instance, surface);
         swapChain = std::make_unique<Vulkan::SwapChain>(*device.get(), surface, window);
-        graphicsPipeline = std::make_unique<Vulkan::GraphicsPipeline>(*(device.get()), spvFilename, vertName, fragName);
+        graphicsPipeline = std::make_unique<Vulkan::GraphicsPipeline>(*device.get(), *swapChain.get(), spvFilename, vertName, fragName);
 
 
 

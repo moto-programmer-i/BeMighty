@@ -9,6 +9,7 @@ import Files;
 import vulkan_hpp;
 
 import :Device;
+import :SwapChain;
 
 // https://docs.vulkan.org/tutorial/latest/_attachments/09_shader_modules.cpp
 // からコピペ
@@ -17,7 +18,7 @@ namespace Vulkan {
 	export class GraphicsPipeline {
 	public:
 		// サンプルに合わせたが、各名前は本当は含めるべきではないかも
-		GraphicsPipeline(Vulkan::Device& device, std::string_view spvFilename, std::string_view vertName, std::string_view fragName):
+		GraphicsPipeline(Vulkan::Device& device, Vulkan::SwapChain& swapChain, std::string_view spvFilename, std::string_view vertName, std::string_view fragName):
 			// なぜか参照の初期化はここに書かなければいけない
 			device(device)
 		{
@@ -80,6 +81,25 @@ namespace Vulkan {
 			vk::PipelineLayoutCreateInfo pipelineLayoutInfo;
 
 			pipelineLayout = vk::raii::PipelineLayout(device.getDevice(), pipelineLayoutInfo);
+
+
+			// https://docs.vulkan.org/tutorial/latest/03_Drawing_a_triangle/02_Graphics_pipeline_basics/03_Render_passes.html
+			vk::PipelineRenderingCreateInfo pipelineRenderingCreateInfo{
+				// 上のattachmentCountと連動させる必要があるのかは不明
+				.colorAttachmentCount = 1,
+				.pColorAttachmentFormats = &swapChain.getSwapChainImageFormat()
+			};
+			vk::GraphicsPipelineCreateInfo pipelineInfo{
+				.pNext = &pipelineRenderingCreateInfo,
+				.stageCount = std::size(shaderStages),
+				.pStages = shaderStages,
+				.pVertexInputState = &vertexInputInfo, .pInputAssemblyState = &inputAssembly,
+				.pViewportState = &viewportState, .pRasterizationState = &rasterizer,
+				.pMultisampleState = &multisampling, .pColorBlendState = &colorBlending,
+				.pDynamicState = &dynamicState, .layout = pipelineLayout, .renderPass = nullptr
+			};
+
+			graphicsPipeline = vk::raii::Pipeline(device.getDevice(), nullptr, pipelineInfo);
 		}
 
 		// nodiscard は不明
@@ -93,5 +113,6 @@ namespace Vulkan {
 	private:
 		Device& device;
 		vk::raii::PipelineLayout pipelineLayout = nullptr;
+		vk::raii::Pipeline graphicsPipeline = nullptr;
 	};
 }
