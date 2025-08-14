@@ -33,9 +33,10 @@ namespace Files {
         initForException(file);
         
         while (!file.eof()) {
-            std::string line;
-            std::getline(file, line);
-            lines.push_back(line);
+            // ––”ö‚É’¼Ú\’z
+            // https://zenn.dev/mafafa/articles/370875167e4a3a
+            lines.emplace_back();
+            std::getline(file, lines.back());
         }
         
         return lines;
