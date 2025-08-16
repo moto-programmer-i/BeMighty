@@ -1,9 +1,10 @@
-export module Vulkan;
+﻿export module Vulkan;
 
 export import :Device;
 export import :SwapChain;
 export import :SwapChainSettings;
 export import :GraphicsPipeline;
+export import :Command;
 
 
 #ifdef NDEBUG
