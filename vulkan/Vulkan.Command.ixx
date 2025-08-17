@@ -113,6 +113,8 @@ namespace Vulkan {
                 .srcQueueFamilyIndex = VK_QUEUE_FAMILY_IGNORED,
                 .dstQueueFamilyIndex = VK_QUEUE_FAMILY_IGNORED,
                 .image = swapChain.getSwapChainImages()[currentFrame],
+
+                // ほかのところにあった気がする
                 .subresourceRange = {
                     .aspectMask = vk::ImageAspectFlagBits::eColor,
                     .baseMipLevel = 0,
@@ -128,6 +130,11 @@ namespace Vulkan {
             };
             commandBuffer.pipelineBarrier2(dependency_info);
         }
+
+        vk::raii::CommandBuffer& getCommandBuffer() {
+            return commandBuffer;
+        }
+
 	private:
 		vk::raii::CommandPool commandPool = nullptr;
 		vk::raii::CommandBuffer commandBuffer = nullptr;

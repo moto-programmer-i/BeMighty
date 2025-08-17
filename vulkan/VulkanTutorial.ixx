@@ -62,6 +62,8 @@ private:
     std::unique_ptr <Vulkan::SwapChain> swapChain;
     std::unique_ptr <Vulkan::GraphicsPipeline> graphicsPipeline;
     std::unique_ptr <Vulkan::Command> command;
+    std::unique_ptr <Vulkan::Rendering> rendering;
+    
 
 #ifdef NDEBUG
 #else
@@ -77,9 +79,15 @@ private:
         swapChain = std::make_unique<Vulkan::SwapChain>(*device.get(), surface, window);
         graphicsPipeline = std::make_unique<Vulkan::GraphicsPipeline>(*device.get(), *swapChain.get(), spvFilename, vertName, fragName);
         command = std::make_unique <Vulkan::Command>(*device.get(), *swapChain.get(), *graphicsPipeline.get());
+        rendering = std::make_unique <Vulkan::Rendering>(*device.get(), *swapChain.get(), *command.get());
 
-
-
+       
+        // メンバ関数はラムダオブジェクトを挟まなければいけない
+        // https://qiita.com/grainrigi/items/1aeeaf19d75d9827d037
+        window.addDraw([&]() {
+            rendering.get()->drawFrame();
+            }
+        );
     }
 
     void createInstance() {      

@@ -5,6 +5,7 @@ export import :SwapChain;
 export import :SwapChainSettings;
 export import :GraphicsPipeline;
 export import :Command;
+export import :Rendering;
 
 
 #ifdef NDEBUG

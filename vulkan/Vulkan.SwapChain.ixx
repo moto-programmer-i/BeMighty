@@ -71,6 +71,10 @@ namespace Vulkan {
             };
         }
 
+        vk::raii::SwapchainKHR& getSwapChain() {
+            return swapChain;
+        }
+
 
         std::vector<vk::Image>& getSwapChainImages() {
             return swapChainImages;
