@@ -5,15 +5,16 @@
 
 import std;
 import Glfw;
-import VulkanTutorial;
+import Vulkan;
 
 constexpr uint32_t WIDTH = 800;
 constexpr uint32_t HEIGHT = 600;
 
+
 int main()
 {
     // ウィンドウの作成と同時に実行。わけた方が良いかは要検討
-    Glfw::Window myWindow{
+    Glfw::Window window{
         {
             .width = WIDTH,
             .height = HEIGHT,
@@ -23,10 +24,12 @@ int main()
 
     // std::cout << "nice module" << std::endl;
 
-    HelloTriangleApplication tutorial{ myWindow };
-    tutorial.run();
 
-    myWindow.waitUntilClose();
+    Vulkan::Vulkan vulkan(window);
+    vulkan.draw();
+
+
+    window.waitUntilClose();
 }
 
 
