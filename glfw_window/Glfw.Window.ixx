@@ -34,10 +34,10 @@ namespace Glfw {
             while (!glfwWindowShouldClose(window)) {
                 glfwPollEvents();
 
-                // 一旦すべてをdraw、将来的には必要なときだけ描画したい
-                for (auto& draw : drawFunctions) {
-                    draw();
-                }
+                //// 一旦すべてをdraw、将来的には必要なときだけ描画したい
+                //for (auto& draw : drawFunctions) {
+                //    draw();
+                //}
             }
         }
 
@@ -67,15 +67,15 @@ namespace Glfw {
         }
 
         
-        void addDraw(std::function<void(void)> draw) {
-            // 関数は元々ポインタなので参照は不要らしい
-            drawFunctions.emplace_back(draw);
-        }
+        //void addDraw(std::function<void(void)> draw) {
+        //    // 関数は元々ポインタなので参照は不要らしい
+        //    drawFunctions.emplace_back(draw);
+        //}
         
 
     private:
         GLFWwindow* window = nullptr;
         WindowSettings settings;
-        std::vector<std::function<void(void)>> drawFunctions;
+        //std::vector<std::function<void(void)>> drawFunctions;
     };
 }

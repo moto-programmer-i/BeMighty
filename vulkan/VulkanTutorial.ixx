@@ -81,13 +81,16 @@ private:
         command = std::make_unique <Vulkan::Command>(*device.get(), *swapChain.get(), *graphicsPipeline.get());
         rendering = std::make_unique <Vulkan::Rendering>(*device.get(), *swapChain.get(), *command.get());
 
+        // 1回だけ三角形描画。本当は指定したものを描画できるようにならなければいけない
+        rendering.get()->drawFrame();
+
        
         // メンバ関数はラムダオブジェクトを挟まなければいけない
         // https://qiita.com/grainrigi/items/1aeeaf19d75d9827d037
-        window.addDraw([&]() {
-            rendering.get()->drawFrame();
-            }
-        );
+        //window.addDraw([&]() {
+        //    rendering.get()->drawFrame();
+        //    }
+        //);
     }
 
     void createInstance() {      
