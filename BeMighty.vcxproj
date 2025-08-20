@@ -168,8 +168,8 @@
     <ClCompile Include="vulkan\Vulkan.GraphicsPipeline.ixx" />
     <ClCompile Include="vulkan\Vulkan.Information.ixx" />
     <ClCompile Include="vulkan\Vulkan.ixx" />
+    <ClCompile Include="vulkan\Vulkan.Settings.ixx" />
     <ClCompile Include="vulkan\Vulkan.SwapChain.ixx" />
-    <ClCompile Include="vulkan\Vulkan.SwapChainSettings.ixx" />
     <ClCompile Include="vulkan\Vulkan.Validation.ixx" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />

@@ -9,8 +9,8 @@ import Glfw;
 
 // Deviceでimportされているので不要？もしくはvulkan_hppモジュールの問題かも
 // import vulkan_hpp;
+import :Settings;
 import :Device;
-import :SwapChainSettings;
 
 // https://docs.vulkan.org/tutorial/latest/_attachments/06_swap_chain_creation.cpp
 // からコピペ
@@ -18,9 +18,7 @@ import :SwapChainSettings;
 namespace Vulkan {
 	export class SwapChain {
 	public:
-        SwapChain(Vulkan::Device& device, vk::raii::SurfaceKHR& surface, Glfw::Window& window,
-            Vulkan::SwapChainSettings settings = {}
-            )
+        SwapChain(Vulkan::Device& device, vk::raii::SurfaceKHR& surface, Glfw::Window& window)
             // 参照はここで初期化しなければならない
             // https://blog.hamayanhamayan.com/entry/2017/11/27/200917
             : window(window)
@@ -42,7 +40,7 @@ namespace Vulkan {
             swapChain = vk::raii::SwapchainKHR(device.getDevice(), swapChainCreateInfo);
             swapChainImages = swapChain.getImages();
 
-            createImageViews(device, settings);
+            createImageViews(device);
         }
 
         static vk::Format chooseSwapSurfaceFormat(const std::vector<vk::SurfaceFormatKHR>& availableFormats) {
@@ -100,20 +98,14 @@ namespace Vulkan {
 		vk::Extent2D swapChainExtent;
 		std::vector<vk::raii::ImageView> swapChainImageViews;
 
-        void createImageViews(Vulkan::Device& device, Vulkan::SwapChainSettings& settings) {
+        void createImageViews(Vulkan::Device& device) {
             swapChainImageViews.clear();
 
             vk::ImageViewCreateInfo imageViewCreateInfo{
                 .viewType = vk::ImageViewType::e2D,
                 .format = swapChainImageFormat,
                 // https://registry.khronos.org/vulkan/specs/latest/man/html/VkImageSubresourceRange.html
-                .subresourceRange = { 
-                    .aspectMask = settings.aspectMask,
-                    .baseMipLevel = settings.baseMipLevel,
-                    .levelCount = settings.levelCount,
-                    .baseArrayLayer = settings.baseArrayLayer,
-                    .layerCount = settings.layerCount 
-                }
+                .subresourceRange = Settings::defaultImageSubresourceRange()
             };
 
             // &imageにするよう警告がでているが、どちらが正しいか不明

@@ -1,9 +1,10 @@
 ﻿export module Vulkan;
 
+
+export import :Settings;
 export import :Information;
 export import :Device;
 export import :SwapChain;
-export import :SwapChainSettings;
 export import :GraphicsPipeline;
 export import :Command;
 export import :Rendering;

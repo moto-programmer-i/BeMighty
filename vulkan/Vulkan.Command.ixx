@@ -9,7 +9,7 @@ import std;
 // import vulkan_hpp;
 
 
-
+import :Settings;
 import :Device;
 import :SwapChain;
 import :GraphicsPipeline;
@@ -53,6 +53,9 @@ namespace Vulkan {
             vk::PipelineStageFlags2 srcStageMask,
             vk::PipelineStageFlags2 dstStageMask
         ) {
+
+            // ImageMemoryBarrierは、処理が順序通りに実行されるように保証
+            // https://harrylovescode.gitbooks.io/vulkan-api/content/chap07/chap07.html
             vk::ImageMemoryBarrier2 barrier = {
                 .srcStageMask = srcStageMask,
                 .srcAccessMask = srcAccessMask,
@@ -65,13 +68,7 @@ namespace Vulkan {
                 .image = swapChain.getSwapChainImages()[currentFrame],
 
                 // ほかのところにあった気がする
-                .subresourceRange = {
-                    .aspectMask = vk::ImageAspectFlagBits::eColor,
-                    .baseMipLevel = 0,
-                    .levelCount = 1,
-                    .baseArrayLayer = 0,
-                    .layerCount = 1
-                }
+                .subresourceRange = Settings::defaultImageSubresourceRange()
             };
             vk::DependencyInfo dependencyInfo = {
                 .dependencyFlags = {},
