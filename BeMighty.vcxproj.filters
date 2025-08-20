@@ -54,13 +54,13 @@
     <ClCompile Include="vulkan\Vulkan.Command.ixx">
       <Filter>ソース ファイル</Filter>
     </ClCompile>
-    <ClCompile Include="Vulkan.Rendering.ixx">
-      <Filter>ソース ファイル</Filter>
-    </ClCompile>
     <ClCompile Include="vulkan\Vulkan.Information.ixx">
       <Filter>ソース ファイル</Filter>
     </ClCompile>
     <ClCompile Include="vulkan\Vulkan.Settings.ixx">
+      <Filter>ソース ファイル</Filter>
+    </ClCompile>
+    <ClCompile Include="vulkan\Vulkan.Rendering.ixx">
       <Filter>ソース ファイル</Filter>
     </ClCompile>
   </ItemGroup>
