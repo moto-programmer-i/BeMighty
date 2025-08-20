@@ -11,6 +11,72 @@ constexpr uint32_t WIDTH = 800;
 constexpr uint32_t HEIGHT = 600;
 
 
+/// <summary>
+        /// チュートリアル用の三角形を描画するコマンドを記録
+        /// </summary>
+        /// <param name="imageIndex"></param>
+void recordCommandBufferToTutorial(Vulkan::Vulkan& vulkan, uint32_t imageIndex) {
+    auto& commandBuffer = vulkan.getCommand().getCommandBuffer();
+    commandBuffer.begin({});
+    // Before starting rendering, transition the swapchain image to COLOR_ATTACHMENT_OPTIMAL
+    vulkan.getCommand().transitionImageLayout(
+        imageIndex,
+        vk::ImageLayout::eUndefined,
+        vk::ImageLayout::eColorAttachmentOptimal,
+        {},                                                     // srcAccessMask (no need to wait for previous operations)
+        vk::AccessFlagBits2::eColorAttachmentWrite,                // dstAccessMask
+        vk::PipelineStageFlagBits2::eTopOfPipe,                   // srcStage
+        vk::PipelineStageFlagBits2::eColorAttachmentOutput        // dstStage
+    );
+
+
+    // この辺のマジックナンバーも要調査
+    vk::ClearValue clearColor = vk::ClearColorValue(0.0f, 0.0f, 0.0f, 1.0f);
+    vk::RenderingAttachmentInfo attachmentInfo = {
+        .imageView = vulkan.getSwapChain().getSwapChainImageViews()[imageIndex],
+        .imageLayout = vk::ImageLayout::eColorAttachmentOptimal,
+        .loadOp = vk::AttachmentLoadOp::eClear,
+        .storeOp = vk::AttachmentStoreOp::eStore,
+        .clearValue = clearColor
+    };
+    vk::RenderingInfo renderingInfo = {
+        .renderArea = {.offset = { 0, 0 }, .extent = vulkan.getSwapChain().getSwapChainExtent()},
+        .layerCount = 1,
+        .colorAttachmentCount = 1,
+        .pColorAttachments = &attachmentInfo
+    };
+
+    // 3????? 1????? 0???????
+    commandBuffer.beginRendering(renderingInfo);
+    commandBuffer.bindPipeline(vk::PipelineBindPoint::eGraphics, *vulkan.getGraphicsPipeline().getGraphicsPipeline());
+    commandBuffer.setViewport(0, vk::Viewport(0.0f, 0.0f, static_cast<float>(vulkan.getSwapChain().getSwapChainExtent().width), static_cast<float>(vulkan.getSwapChain().getSwapChainExtent().height), 0.0f, 1.0f));
+    commandBuffer.setScissor(0, vk::Rect2D(vk::Offset2D(0, 0), vulkan.getSwapChain().getSwapChainExtent()));
+    commandBuffer.draw(3, 1, 0, 0);
+    commandBuffer.endRendering();
+    // After rendering, transition the swapchain image to PRESENT_SRC
+    vulkan.getCommand().transitionImageLayout(
+        imageIndex,
+        vk::ImageLayout::eColorAttachmentOptimal,
+        vk::ImageLayout::ePresentSrcKHR,
+        vk::AccessFlagBits2::eColorAttachmentWrite,                 // srcAccessMask
+        {},                                                      // dstAccessMask
+        vk::PipelineStageFlagBits2::eColorAttachmentOutput,        // srcStage
+        vk::PipelineStageFlagBits2::eBottomOfPipe                  // dstStage
+    );
+    commandBuffer.end();
+}
+
+
+// チュートリアルの三角形を描画
+void drawTriangleTutorial(Vulkan::Vulkan& vulkan) {
+    vulkan.getRendering().drawFrame(
+        [&](uint32_t imageIndex) {
+            recordCommandBufferToTutorial(vulkan, imageIndex);
+        }
+    );
+}
+
+
 int main()
 {
     // ウィンドウの作成と同時に実行。わけた方が良いかは要検討
@@ -26,7 +92,7 @@ int main()
 
 
     Vulkan::Vulkan vulkan(window);
-    vulkan.drawTriangleTutorial();
+    drawTriangleTutorial(vulkan);
 
 
     window.waitUntilClose();

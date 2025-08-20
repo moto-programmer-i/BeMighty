@@ -44,76 +44,22 @@ namespace Vulkan {
 			commandBuffer = std::move(vk::raii::CommandBuffers(device.getDevice(), allocInfo).front());
 		}
 
-        /// <summary>
-        /// チュートリアル用の三角形を描画するコマンドを記録
-        /// </summary>
-        /// <param name="imageIndex"></param>
-        void recordCommandBufferToTutorial(uint32_t imageIndex) {
-            commandBuffer.begin({});
-            // Before starting rendering, transition the swapchain image to COLOR_ATTACHMENT_OPTIMAL
-            transition_image_layout(
-                imageIndex,
-                vk::ImageLayout::eUndefined,
-                vk::ImageLayout::eColorAttachmentOptimal,
-                {},                                                     // srcAccessMask (no need to wait for previous operations)
-                vk::AccessFlagBits2::eColorAttachmentWrite,                // dstAccessMask
-                vk::PipelineStageFlagBits2::eTopOfPipe,                   // srcStage
-                vk::PipelineStageFlagBits2::eColorAttachmentOutput        // dstStage
-            );
-
-
-            // この辺のマジックナンバーも要調査
-            vk::ClearValue clearColor = vk::ClearColorValue(0.0f, 0.0f, 0.0f, 1.0f);
-            vk::RenderingAttachmentInfo attachmentInfo = {
-                .imageView = swapChain.getSwapChainImageViews()[imageIndex],
-                .imageLayout = vk::ImageLayout::eColorAttachmentOptimal,
-                .loadOp = vk::AttachmentLoadOp::eClear,
-                .storeOp = vk::AttachmentStoreOp::eStore,
-                .clearValue = clearColor
-            };
-            vk::RenderingInfo renderingInfo = {
-                .renderArea = {.offset = { 0, 0 }, .extent = swapChain.getSwapChainExtent()},
-                .layerCount = 1,
-                .colorAttachmentCount = 1,
-                .pColorAttachments = &attachmentInfo
-            };
-
-            // 3????? 1????? 0???????
-            commandBuffer.beginRendering(renderingInfo);
-            commandBuffer.bindPipeline(vk::PipelineBindPoint::eGraphics, *graphicsPipeline.getGraphicsPipeline());
-            commandBuffer.setViewport(0, vk::Viewport(0.0f, 0.0f, static_cast<float>(swapChain.getSwapChainExtent().width), static_cast<float>(swapChain.getSwapChainExtent().height), 0.0f, 1.0f));
-            commandBuffer.setScissor(0, vk::Rect2D(vk::Offset2D(0, 0), swapChain.getSwapChainExtent()));
-            commandBuffer.draw(3, 1, 0, 0);
-            commandBuffer.endRendering();
-            // After rendering, transition the swapchain image to PRESENT_SRC
-            transition_image_layout(
-                imageIndex,
-                vk::ImageLayout::eColorAttachmentOptimal,
-                vk::ImageLayout::ePresentSrcKHR,
-                vk::AccessFlagBits2::eColorAttachmentWrite,                 // srcAccessMask
-                {},                                                      // dstAccessMask
-                vk::PipelineStageFlagBits2::eColorAttachmentOutput,        // srcStage
-                vk::PipelineStageFlagBits2::eBottomOfPipe                  // dstStage
-            );
-            commandBuffer.end();
-        }
-
-        void transition_image_layout(
+        void transitionImageLayout(
             uint32_t currentFrame,
-            vk::ImageLayout old_layout,
-            vk::ImageLayout new_layout,
-            vk::AccessFlags2 src_access_mask,
-            vk::AccessFlags2 dst_access_mask,
-            vk::PipelineStageFlags2 src_stage_mask,
-            vk::PipelineStageFlags2 dst_stage_mask
+            vk::ImageLayout oldLayout,
+            vk::ImageLayout newLayout,
+            vk::AccessFlags2 srcAccessMask,
+            vk::AccessFlags2 dstAccessMask,
+            vk::PipelineStageFlags2 srcStageMask,
+            vk::PipelineStageFlags2 dstStageMask
         ) {
             vk::ImageMemoryBarrier2 barrier = {
-                .srcStageMask = src_stage_mask,
-                .srcAccessMask = src_access_mask,
-                .dstStageMask = dst_stage_mask,
-                .dstAccessMask = dst_access_mask,
-                .oldLayout = old_layout,
-                .newLayout = new_layout,
+                .srcStageMask = srcStageMask,
+                .srcAccessMask = srcAccessMask,
+                .dstStageMask = dstStageMask,
+                .dstAccessMask = dstAccessMask,
+                .oldLayout = oldLayout,
+                .newLayout = newLayout,
                 .srcQueueFamilyIndex = VK_QUEUE_FAMILY_IGNORED,
                 .dstQueueFamilyIndex = VK_QUEUE_FAMILY_IGNORED,
                 .image = swapChain.getSwapChainImages()[currentFrame],
@@ -127,12 +73,12 @@ namespace Vulkan {
                     .layerCount = 1
                 }
             };
-            vk::DependencyInfo dependency_info = {
+            vk::DependencyInfo dependencyInfo = {
                 .dependencyFlags = {},
                 .imageMemoryBarrierCount = 1,
                 .pImageMemoryBarriers = &barrier
             };
-            commandBuffer.pipelineBarrier2(dependency_info);
+            commandBuffer.pipelineBarrier2(dependencyInfo);
         }
 
         vk::raii::CommandBuffer& getCommandBuffer() {
