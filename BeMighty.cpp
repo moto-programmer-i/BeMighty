@@ -26,7 +26,7 @@ int main()
 
 
     Vulkan::Vulkan vulkan(window);
-    vulkan.draw();
+    vulkan.drawTriangleTutorial();
 
 
     window.waitUntilClose();

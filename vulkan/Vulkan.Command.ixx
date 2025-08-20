@@ -44,7 +44,11 @@ namespace Vulkan {
 			commandBuffer = std::move(vk::raii::CommandBuffers(device.getDevice(), allocInfo).front());
 		}
 
-        void recordCommandBuffer(uint32_t imageIndex) {
+        /// <summary>
+        /// チュートリアル用の三角形を描画するコマンドを記録
+        /// </summary>
+        /// <param name="imageIndex"></param>
+        void recordCommandBufferToTutorial(uint32_t imageIndex) {
             commandBuffer.begin({});
             // Before starting rendering, transition the swapchain image to COLOR_ATTACHMENT_OPTIMAL
             transition_image_layout(

@@ -46,9 +46,13 @@ namespace Vulkan {
 
         }
 
-        void draw() {
-            // チュートリアルの状態。本当は指定したものを描画できるようにする
-            rendering.drawFrame();
+        // チュートリアルの三角形を描画
+        void drawTriangleTutorial() {
+            rendering.drawFrame(
+                [&](uint32_t imageIndex) {
+                    command.recordCommandBufferToTutorial(imageIndex);
+                }
+            );
         }
 	private:
         // 外部で管理されているウィンドウ。このクラス内では解放しないこと
