@@ -38,6 +38,8 @@ namespace Vulkan {
         static constexpr uint32_t APPLICATION_VERSION = 10000;
         static constexpr uint32_t ENGINE_VERSION = 10000;
 
+        
+
 		Information(Glfw::Window& window)
             // 参照はここで初期化しなければならない
             // https://blog.hamayanhamayan.com/entry/2017/11/27/200917

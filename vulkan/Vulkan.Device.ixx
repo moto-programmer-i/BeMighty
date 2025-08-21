@@ -84,6 +84,7 @@ namespace Vulkan {
                             });
 
                     auto features = device.template getFeatures2<vk::PhysicalDeviceFeatures2, vk::PhysicalDeviceVulkan13Features, vk::PhysicalDeviceExtendedDynamicStateFeaturesEXT>();
+
                     bool supportsRequiredFeatures = features.template get<vk::PhysicalDeviceVulkan13Features>().dynamicRendering &&
                         features.template get<vk::PhysicalDeviceExtendedDynamicStateFeaturesEXT>().extendedDynamicState;
 
@@ -124,8 +125,13 @@ namespace Vulkan {
             // query for Vulkan 1.3 features
             vk::StructureChain<vk::PhysicalDeviceFeatures2, vk::PhysicalDeviceVulkan13Features, vk::PhysicalDeviceExtendedDynamicStateFeaturesEXT> featureChain = {
                 {},                               // vk::PhysicalDeviceFeatures2
-                {.dynamicRendering = true },      // vk::PhysicalDeviceVulkan13Features
-                {.extendedDynamicState = true }   // vk::PhysicalDeviceExtendedDynamicStateFeaturesEXT
+
+                // vkCmdPipelineBarrier2(): the synchronization2 feature was not enabled.の警告がでたので対処
+                // https://stackoverflow.com/a/76472644
+                {.synchronization2 = true, .dynamicRendering = true },      // vk::PhysicalDeviceVulkan13Features
+
+
+                {.extendedDynamicState = true }  // vk::PhysicalDeviceExtendedDynamicStateFeaturesEXT
             };
 
             // create a Device
