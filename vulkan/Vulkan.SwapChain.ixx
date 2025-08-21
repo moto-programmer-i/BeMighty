@@ -21,8 +21,19 @@ namespace Vulkan {
         SwapChain(Vulkan::Device& device, vk::raii::SurfaceKHR& surface, Glfw::Window& window)
             // 参照はここで初期化しなければならない
             // https://blog.hamayanhamayan.com/entry/2017/11/27/200917
-            : window(window)
+            : device(device), surface(surface), window(window)
         {
+            createSwapChain();
+
+            createImageViews();
+
+            // チュートリアルではframebufferResizedの状態を管理していたが、
+            // SwapChainを再作成すればよいだけにみえるので変更
+            // https://docs.vulkan.org/tutorial/latest/_attachments/17_swap_chain_recreation.cpp
+            window.addResizeCallbacks([&]() {recreateSwapChain(); });
+        }
+
+        void createSwapChain() {
             auto surfaceCapabilities = device.getPhysicalDevice().getSurfaceCapabilitiesKHR(surface);
             swapChainImageFormat = chooseSwapSurfaceFormat(device.getPhysicalDevice().getSurfaceFormatsKHR(surface));
             swapChainExtent = chooseSwapExtent(surfaceCapabilities);
@@ -39,8 +50,6 @@ namespace Vulkan {
 
             swapChain = vk::raii::SwapchainKHR(device.getDevice(), swapChainCreateInfo);
             swapChainImages = swapChain.getImages();
-
-            createImageViews(device);
         }
 
         static vk::Format chooseSwapSurfaceFormat(const std::vector<vk::SurfaceFormatKHR>& availableFormats) {
@@ -90,15 +99,35 @@ namespace Vulkan {
             return swapChainExtent;
         }
 
+        void cleanupSwapChain() {
+            swapChainImageViews.clear();
+            swapChain = nullptr;
+        }
+
+        void recreateSwapChain() {
+            // チュートリアルでは最小化の間はループに入るが、それをやめてみる
+            // （最小化の間はこの関数が呼ばれないようにした）
+            // window.waitUntilSetFramebufferSize();
+
+            device.getDevice().waitIdle();
+
+            cleanupSwapChain();
+            createSwapChain();
+            createImageViews();
+        }
+
+
 	private:
         Glfw::Window& window;
+        vk::raii::SurfaceKHR& surface;
+        Vulkan::Device& device;
 		vk::raii::SwapchainKHR swapChain = nullptr;
 		std::vector<vk::Image> swapChainImages;
 		vk::Format swapChainImageFormat = vk::Format::eUndefined;
 		vk::Extent2D swapChainExtent;
 		std::vector<vk::raii::ImageView> swapChainImageViews;
 
-        void createImageViews(Vulkan::Device& device) {
+        void createImageViews() {
             swapChainImageViews.clear();
 
             vk::ImageViewCreateInfo imageViewCreateInfo{

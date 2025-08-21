@@ -95,6 +95,8 @@ namespace Vulkan {
         /// </summary>
         /// <param name="recordCommandBuffer">imageIndexを使って描画するコマンド</param>
         void drawFrame(std::function<void(uint32_t)> recordCommandBuffer) {
+            // ウィンドウ最小化のときの正しい挙動が不明
+
             // 前のコマンドが終了するまで待つ
             while (vk::Result::eTimeout == device.getDevice().waitForFences(*inFlightFences[currentFrame], vk::True, UINT64_MAX));
 
@@ -114,6 +116,17 @@ namespace Vulkan {
                 // GPUが何かを完了したことをホストが知る必要がある場合にフェンスを使用
                 // https://docs.vulkan.org/tutorial/latest/03_Drawing_a_triangle/03_Drawing/02_Rendering_and_presentation.html#_fences
                 nullptr);
+
+            // 本来はtry catchでeErrorOutOfDateKHRが発生した場合にrecreateSwapChainするべき？
+            // チュートリアルではdrawの中でrecreateSwapChainを呼ぶが、
+            // 今はウィンドウサイズ変更時に自動的にrecreateSwapChainを呼ぶように変更した(Window参照)
+            if (result == vk::Result::eErrorOutOfDateKHR) {
+                // swapChain.recreateSwapChain();
+                return;
+            }
+            if (result != vk::Result::eSuccess && result != vk::Result::eSuboptimalKHR) {
+                throw std::runtime_error("failed to acquire swap chain image!");
+            }
 
             device.getDevice().resetFences(*inFlightFences[currentFrame]);
             commandBuffers[currentFrame].reset();
@@ -155,11 +168,15 @@ namespace Vulkan {
                 .pImageIndices = &imageIndex
             };
             result = device.getQueue().presentKHR(presentInfoKHR);
-            switch (result)
-            {
-            case vk::Result::eSuccess: break;
-            case vk::Result::eSuboptimalKHR: std::cout << "vk::Queue::presentKHR returned vk::Result::eSuboptimalKHR !\n"; break;
-            default: break;  // an unexpected result is returned!
+            if (result == vk::Result::eErrorOutOfDateKHR || result == vk::Result::eSuboptimalKHR
+                // チュートリアルではframebufferResizedの状態を見ていたが、recreateSwapChainしたいだけのようなので変更
+                // || framebufferResized
+                ) {
+                // framebufferResized = false;
+                // swapChain.recreateSwapChain();
+            }
+            else if (result != vk::Result::eSuccess) {
+                throw std::runtime_error("failed to present swap chain image!");
             }
 
             // 次のフレームに進む

@@ -27,7 +27,15 @@ namespace Glfw {
 
             glfwWindowHint(GLFW_RESIZABLE, GLFW_FALSE);
             window = glfwCreateWindow(settings.width, settings.height, settings.name.c_str(), nullptr, nullptr);
+
+            // インスタンスを登録
+            glfwSetWindowUserPointer(window, this);
+
+            // ウィンドウサイズ変更時などのコールバック
+            glfwSetFramebufferSizeCallback(window, framebufferResizeCallback);
         }
+
+        
 
         // ウィンドウを閉じるまで待機
         void waitUntilClose() {
@@ -45,11 +53,10 @@ namespace Glfw {
             return this->settings;
         }
 
-        ~Window() {
-            // GLFWの終了
-            glfwDestroyWindow(window);
-            glfwTerminate();
-        }
+        
+
+
+        
 
         // ウィンドウへの参照。このインスタンス内で管理されるので、解放しないこと
         GLFWwindow& getWindow() {
@@ -66,16 +73,58 @@ namespace Glfw {
             return size;
         }
 
+        // 
+        Glfw::Size waitUntilSetFramebufferSize() {
+            // ウィンドウ最小化のときなどは、FramebufferSizeが0になってしまう
+            // https://docs.vulkan.org/tutorial/latest/03_Drawing_a_triangle/04_Swap_chain_recreation.html#_handling_minimization
+            Glfw::Size size{};
+            do {
+                glfwGetFramebufferSize(window, &size.width, &size.height);
+                glfwWaitEvents();
+            } while (size.width == 0 || size.height == 0);
+            return size;
+        }
+
         
         //void addDraw(std::function<void(void)> draw) {
         //    // 関数は元々ポインタなので参照は不要らしい
         //    drawFunctions.emplace_back(draw);
         //}
+
+        void addResizeCallbacks(std::function<void(void)> resizeCallback) {
+            // 関数は元々ポインタなので参照は不要らしい
+            resizeCallbacks.emplace_back(resizeCallback);
+        }
+
+        static void framebufferResizeCallback(GLFWwindow* window, int width, int height) {
+            // ウィンドウ最小化の場合はwidth, heightともに0
+            if (width == 0 && height == 0) {
+                // 最小化のときに実行したい場合があるかもしれない
+                return;
+            }
+
+            auto instance = reinterpret_cast<Window*>(glfwGetWindowUserPointer(window));
+
+            // チュートリアルでは即座にrecreateSwapChainしていなかったが、
+            // 現状即座に実行するように変更した
+            // https://docs.vulkan.org/tutorial/latest/_attachments/17_swap_chain_recreation.cpp
+            //app->framebufferResized = true;
+
+            for (auto& resizeCallback : instance->resizeCallbacks) {
+                resizeCallback();
+            }
+        }
         
+        ~Window() {
+            // GLFWの終了
+            glfwDestroyWindow(window);
+            glfwTerminate();
+        }
 
     private:
         GLFWwindow* window = nullptr;
         WindowSettings settings;
         //std::vector<std::function<void(void)>> drawFunctions;
+        std::vector<std::function<void(void)>> resizeCallbacks;
     };
 }
