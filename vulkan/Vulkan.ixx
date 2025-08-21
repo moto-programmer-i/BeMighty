@@ -6,7 +6,6 @@ export import :Information;
 export import :Device;
 export import :SwapChain;
 export import :GraphicsPipeline;
-export import :Command;
 export import :Rendering;
 
 
@@ -35,8 +34,7 @@ namespace Vulkan {
             device(information.getInstance(), information.getSurface()),
             swapChain(device, information.getSurface(), window),
             graphicsPipeline(device, swapChain, spvFilename, vertName, fragName),
-            command(device, swapChain, graphicsPipeline),
-            rendering(device, swapChain, command)
+            rendering(device, swapChain)
 
 #ifdef NDEBUG
 #else
@@ -61,10 +59,6 @@ namespace Vulkan {
             return graphicsPipeline;
         }
 
-        Command& getCommand() {
-            return command;
-        }
-
         Rendering& getRendering() {
             return rendering;
         }
@@ -76,7 +70,6 @@ namespace Vulkan {
         Device device;
         SwapChain swapChain;
         GraphicsPipeline graphicsPipeline;
-        Command command;
         Rendering rendering;
 
 

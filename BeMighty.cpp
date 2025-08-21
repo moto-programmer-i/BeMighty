@@ -16,10 +16,10 @@ constexpr uint32_t HEIGHT = 600;
         /// </summary>
         /// <param name="imageIndex"></param>
 void recordCommandBufferToTutorial(Vulkan::Vulkan& vulkan, uint32_t imageIndex) {
-    auto& commandBuffer = vulkan.getCommand().getCommandBuffer();
+    auto& commandBuffer = vulkan.getRendering().getCurrentCommandBuffer();
     commandBuffer.begin({});
     // Before starting rendering, transition the swapchain image to COLOR_ATTACHMENT_OPTIMAL
-    vulkan.getCommand().transitionImageLayout(
+    vulkan.getRendering().transitionImageLayout(
         imageIndex,
         vk::ImageLayout::eUndefined,
         vk::ImageLayout::eColorAttachmentOptimal,
@@ -91,7 +91,7 @@ void recordCommandBufferToTutorial(Vulkan::Vulkan& vulkan, uint32_t imageIndex) 
 
 
     // After rendering, transition the swapchain image to PRESENT_SRC
-    vulkan.getCommand().transitionImageLayout(
+    vulkan.getRendering().transitionImageLayout(
         imageIndex,
         vk::ImageLayout::eColorAttachmentOptimal,
         vk::ImageLayout::ePresentSrcKHR,

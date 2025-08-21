@@ -51,9 +51,6 @@
     <ClCompile Include="Files\Files.ixx">
       <Filter>ソース ファイル</Filter>
     </ClCompile>
-    <ClCompile Include="vulkan\Vulkan.Command.ixx">
-      <Filter>ソース ファイル</Filter>
-    </ClCompile>
     <ClCompile Include="vulkan\Vulkan.Information.ixx">
       <Filter>ソース ファイル</Filter>
     </ClCompile>
