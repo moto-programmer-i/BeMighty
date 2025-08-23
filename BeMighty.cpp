@@ -6,6 +6,7 @@
 import std;
 import Glfw;
 import Vulkan;
+import glm;
 
 constexpr uint32_t WIDTH = 800;
 constexpr uint32_t HEIGHT = 600;
@@ -52,7 +53,7 @@ void recordCommandBufferToTutorial(Vulkan::Vulkan& vulkan, uint32_t imageIndex) 
         .pColorAttachments = &attachmentInfo
     };
 
-    // 3????? 1????? 0???????
+    
     commandBuffer.beginRendering(renderingInfo);
     commandBuffer.bindPipeline(vk::PipelineBindPoint::eGraphics, *vulkan.getGraphicsPipeline().getGraphicsPipeline());
     commandBuffer.setViewport(0, vk::Viewport(0.0f, 0.0f, static_cast<float>(vulkan.getSwapChain().getSwapChainExtent().width), static_cast<float>(vulkan.getSwapChain().getSwapChainExtent().height), 0.0f, 1.0f));
@@ -125,7 +126,9 @@ int main()
         }
     };
 
-    // std::cout << "nice module" << std::endl;
+    
+
+    std::cout << glm::abs(-1) << std::endl;
 
 
     Vulkan::Vulkan vulkan(window);
