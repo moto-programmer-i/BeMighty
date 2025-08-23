@@ -198,6 +198,7 @@
     <ClCompile Include="vulkan\Vulkan.Settings.ixx" />
     <ClCompile Include="vulkan\Vulkan.SwapChain.ixx" />
     <ClCompile Include="vulkan\Vulkan.Validation.ixx" />
+    <ClCompile Include="vulkan\Vulkan.Vertex.ixx" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

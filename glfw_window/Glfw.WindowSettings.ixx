@@ -1,4 +1,4 @@
-export module Glfw:WindowSettings;
+﻿export module Glfw:WindowSettings;
 
 import std;
 

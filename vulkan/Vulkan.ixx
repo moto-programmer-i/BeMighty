@@ -7,6 +7,7 @@ export import :Device;
 export import :SwapChain;
 export import :GraphicsPipeline;
 export import :Rendering;
+export import :Vertex;
 
 
 #ifdef NDEBUG

@@ -63,5 +63,8 @@
     <ClCompile Include="libraries\glm-1.0.1-light\glm\glm.cppm">
       <Filter>ソース ファイル</Filter>
     </ClCompile>
+    <ClCompile Include="vulkan\Vulkan.Vertex.ixx">
+      <Filter>ソース ファイル</Filter>
+    </ClCompile>
   </ItemGroup>
 </Project>

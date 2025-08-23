@@ -6,11 +6,13 @@ import std;
 
 import Files;
 
-// Deviceでimportされているので不要？もしくはvulkan_hppモジュールの問題かも
-// import vulkan_hpp;
+
+import vulkan_hpp;
 
 import :Device;
 import :SwapChain;
+
+import :Vertex;
 
 // https://docs.vulkan.org/tutorial/latest/_attachments/09_shader_modules.cpp
 // からコピペ
@@ -31,9 +33,19 @@ namespace Vulkan {
 
 
 			// 設定の詳細不明、一旦保留
-			// https://docs.vulkan.org/tutorial/latest/03_Drawing_a_triangle/02_Graphics_pipeline_basics/02_Fixed_functions.html
+			// https://docs.vulkan.org/tutorial/latest/_attachments/18_vertex_input.cpp
 
-			vk::PipelineVertexInputStateCreateInfo vertexInputInfo;
+			// チュートリアル用のコードが混じってしまっている
+			auto bindingDescription = Vertex::getBindingDescription();
+			auto attributeDescriptions = Vertex::getAttributeDescriptions();
+			vk::PipelineVertexInputStateCreateInfo vertexInputInfo{
+				.vertexBindingDescriptionCount = 1,
+				.pVertexBindingDescriptions = &bindingDescription,
+				.vertexAttributeDescriptionCount = static_cast<uint32_t>(attributeDescriptions.size()),
+				.pVertexAttributeDescriptions = attributeDescriptions.data()
+			};
+
+
 			vk::PipelineInputAssemblyStateCreateInfo inputAssembly{
 				.topology = vk::PrimitiveTopology::eTriangleList
 			};
