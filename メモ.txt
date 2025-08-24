@@ -19,3 +19,13 @@
 	https://stackoverflow.com/a/5606276 を参考に設定。右クリックではなくツールバーから実行にした
 
 	バッチファイルのときだけ有効にしたい
+
+■Vulkan
+	CPUからアクセスできるメモリタイプが、グラフィックカード自体が読み取るのに最適なメモリタイプではない可能性がある
+	実際のアプリケーションでは、vkAllocateMemoryすべてのバッファを個別に呼び出す必要はない
+	同時メモリ割り当ての最大数はmaxMemoryAllocationCount物理デバイスの制限によって制限される
+	多数のオブジェクトに同時にメモリを割り当てる適切な方法は、単一の割り当てを複数の異なるオブジェクトに分割する
+	カスタムアロケータを作成することです。
+	https://docs.vulkan.org/tutorial/latest/04_Vertex_buffers/02_Staging_buffer.html
+
+	

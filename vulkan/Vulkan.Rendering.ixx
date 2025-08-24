@@ -188,6 +188,10 @@ namespace Vulkan {
             return commandBuffers[currentFrame];
         }
 
+        vk::raii::CommandPool& getCommandPool() {
+            return commandPool;
+        }
+
         static constexpr int MAX_FRAMES_IN_FLIGHT = 2;
 
 	private:
