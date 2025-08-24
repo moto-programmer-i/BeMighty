@@ -66,12 +66,25 @@ void drawTriangleTutorial(Vulkan::Vulkan& vulkan, Vulkan::VertexManager& vertexM
 
 
             commandBuffer.bindVertexBuffers(0, *vertexManager.getVertexBuffer(), { 0 });
+            commandBuffer.bindIndexBuffer(*vertexManager.getIndexBuffer(), 0, vertexManager.getIndexType());
+
+            // Vulkanにインデックスバッファを使用するよう指示
+            //  本来1つのinstanceを引数にとるオーバーロードがあるべき
+            commandBuffer.drawIndexed(
+                // indexCount
+                vertexManager.getIndices().size(),
+                // instanceCount
+                1,
+                // firstIndex
+                0,
+                // vertexOffset
+                0,
+                // firstInstance
+                0);
 
 
 
-
-
-
+            /*
             commandBuffer.draw(
                 // vertexCount: Even though we don’t have a vertex buffer, we technically still have 3 vertices to draw.
                 // 現状はshader.slangのpositionの数と合わせないとうまく動作しない
@@ -86,6 +99,7 @@ void drawTriangleTutorial(Vulkan::Vulkan& vulkan, Vulkan::VertexManager& vertexM
                 // firstInstance : Used as an offset for instanced rendering, defines the lowest value of SV_InstanceID.
                 0
             );
+            */
 
 
 
@@ -126,15 +140,19 @@ int main()
 
     Vulkan::Vulkan vulkan(window);
 
-    
+
     Vulkan::VertexManager vertexManager(
         vulkan.getDevice(),
         vulkan.getRendering(),
         {
-        {{0.0f, -0.5f}, {1.0f, 0.0f, 0.0f}},
-        {{0.5f, 0.5f}, {0.0f, 1.0f, 0.0f}},
-        {{-0.5f, 0.5f}, {0.0f, 0.0f, 1.0f}}
-        }
+            {{-0.5f, -0.5f}, {1.0f, 0.0f, 0.0f}},
+            {{0.5f, -0.5f}, {0.0f, 1.0f, 0.0f}},
+            {{0.5f, 0.5f}, {0.0f, 0.0f, 1.0f}},
+            {{-0.5f, 0.5f}, {1.0f, 1.0f, 1.0f}}
+        },
+
+        // 頂点再利用のためのインデックス。これ自分で書くの？？？？
+        {0, 1, 2, 2, 3, 0}
     );
     
 
