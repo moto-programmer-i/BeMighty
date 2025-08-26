@@ -47,6 +47,12 @@ namespace Glfw {
                 //    draw();
                 //}
             }
+
+            // ウィンドウを閉じるときは全てのスレッドを停止
+            std::for_each(std::execution::par, threads.begin(), threads.end(), [&](auto& thread) {
+                thread.request_stop();
+                thread.join();
+            });
         }
 
         WindowSettings getSettings() {
@@ -91,6 +97,22 @@ namespace Glfw {
         //    drawFunctions.emplace_back(draw);
         //}
 
+        /// <summary>
+        /// スレッドを追加
+        /// 例：
+        /// [](std::stop_token token) {
+        ///     while (!token.stop_requested()) {
+        ///         //停止要求がくるまで処理を継続する…
+        ///     }
+        /// }
+        /// </summary>
+        /// <typeparam name="...Args"></typeparam>
+        /// <param name="...args">std::jthreadのコンストラクタの引数</param>
+        template <class... Args>
+        void emplaceThread(Args&&... args) {
+            threads.emplace_back(args...);
+        }
+
         void addResizeCallbacks(std::function<void(void)> resizeCallback) {
             // 関数は元々ポインタなので参照は不要らしい
             resizeCallbacks.emplace_back(resizeCallback);
@@ -125,6 +147,7 @@ namespace Glfw {
         GLFWwindow* window = nullptr;
         WindowSettings settings;
         //std::vector<std::function<void(void)>> drawFunctions;
+        std::vector<std::jthread> threads;
         std::vector<std::function<void(void)>> resizeCallbacks;
     };
 }

@@ -11,6 +11,7 @@ import vulkan_hpp;
 
 import :Device;
 import :SwapChain;
+import :Descriptor;
 
 import :Vertex;
 
@@ -21,10 +22,10 @@ namespace Vulkan {
 	export class GraphicsPipeline {
 	public:
 		// サンプルに合わせたが、各名前は本当は含めるべきではないかも
-		GraphicsPipeline(Vulkan::Device& device, Vulkan::SwapChain& swapChain, std::string_view spvFilename, std::string_view vertName, std::string_view fragName):
+		GraphicsPipeline(Device& device, SwapChain& swapChain, Descriptor& descriptor, std::string_view spvFilename, std::string_view vertName, std::string_view fragName):
 			// なぜか参照の初期化はここに書かなければいけない
 			device(device)
-		{
+		{	
 			vk::raii::ShaderModule shaderModule = createShaderModule(Files::readFileToChar(spvFilename));
 
 			vk::PipelineShaderStageCreateInfo vertShaderStageInfo{ .stage = vk::ShaderStageFlagBits::eVertex, .module = shaderModule,  .pName = vertName.data() };
@@ -59,7 +60,12 @@ namespace Vulkan {
 				.rasterizerDiscardEnable = vk::False,
 				.polygonMode = vk::PolygonMode::eFill,
 				.cullMode = vk::CullModeFlagBits::eBack,
-				.frontFace = vk::FrontFace::eClockwise,
+
+				// 変換の都合で変えなければならなくなったらしい。どっちの方が良いかは不明
+				// https://docs.vulkan.org/tutorial/latest/05_Uniform_buffers/01_Descriptor_pool_and_sets.html#_using_descriptor_sets
+				// .frontFace = vk::FrontFace::eClockwise,
+				 .frontFace = vk::FrontFace::eCounterClockwise,
+
 				.depthBiasEnable = vk::False,
 				.depthBiasSlopeFactor = 1.0f,
 				.lineWidth = 1.0f
@@ -91,7 +97,12 @@ namespace Vulkan {
 				.pDynamicStates = dynamicStates.data()
 			};
 
-			vk::PipelineLayoutCreateInfo pipelineLayoutInfo;
+			vk::PipelineLayoutCreateInfo pipelineLayoutInfo{
+				// 本来は配列の長さ
+				.setLayoutCount = 1,
+				.pSetLayouts = &*descriptor.getDescriptorSetLayout(),
+				.pushConstantRangeCount = 0
+			};
 
 			pipelineLayout = vk::raii::PipelineLayout(device.getDevice(), pipelineLayoutInfo);
 
@@ -113,6 +124,8 @@ namespace Vulkan {
 			};
 
 			graphicsPipeline = vk::raii::Pipeline(device.getDevice(), nullptr, pipelineInfo);
+
+			
 		}
 
 		// nodiscard は不明
@@ -121,6 +134,10 @@ namespace Vulkan {
 			vk::raii::ShaderModule shaderModule{ device.getDevice(), createInfo};
 
 			return shaderModule;
+		}
+
+		vk::raii::PipelineLayout& getPipelineLayout() {
+			return pipelineLayout;
 		}
 
 

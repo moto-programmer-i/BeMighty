@@ -1,0 +1,18 @@
+﻿CPUからアクセスできるメモリタイプが、グラフィックカード自体が読み取るのに最適なメモリタイプではない可能性がある
+実際のアプリケーションでは、vkAllocateMemoryすべてのバッファを個別に呼び出す必要はない
+同時メモリ割り当ての最大数はmaxMemoryAllocationCount物理デバイスの制限によって制限される
+多数のオブジェクトに同時にメモリを割り当てる適切な方法は、単一の割り当てを複数の異なるオブジェクトに分割する
+カスタムアロケータを作成することです。
+https://docs.vulkan.org/tutorial/latest/04_Vertex_buffers/02_Staging_buffer.html
+
+バッファなどの複数のリソースを単一のメモリ割り当てから割り当てるべきであると既に説明しましたが、実際にはさらに一歩進む必要があります。 
+ドライバ開発者は、頂点バッファやインデックスバッファなどの複数のバッファを単一のバッファに格納しVkBufferなどのコマンドで
+オフセットを使用するvkCmdBindVertexBuffersことも推奨しています。
+その利点は、データがより近くなるため、その場合データがキャッシュフレンドリーになることです。
+同じレンダリング操作中に使用されない場合は、データがリフレッシュされるという条件で、複数のリソースに同じメモリチャンクを再利用することさえ可能です。
+これはエイリアシングと呼ばれ、一部の Vulkan 関数には、これを指定する明示的なフラグがあります。
+https://docs.vulkan.org/tutorial/latest/04_Vertex_buffers/03_Index_buffer.html
+
+アライメント要件
+シェーダーの定義がC++と一致しない場合がある
+https://docs.vulkan.org/tutorial/latest/05_Uniform_buffers/01_Descriptor_pool_and_sets.html#_alignment_requirements

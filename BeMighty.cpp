@@ -2,11 +2,20 @@
 //
 
 #include <memory>
+#include <chrono>
+
+
+
 
 import std;
 import Glfw;
 import Vulkan;
+
+
+// Intellisenseではうまく読み込まれない
 import glm;
+
+
 
 constexpr uint32_t WIDTH = 800;
 constexpr uint32_t HEIGHT = 600;
@@ -17,6 +26,36 @@ constexpr uint32_t HEIGHT = 600;
 // チュートリアルの三角形を描画
 void drawTriangleTutorial(Vulkan::Vulkan& vulkan, Vulkan::VertexManager& vertexManager) {
     vulkan.getRendering().drawFrame(
+        // チュートリアルのupdateUniformBuffer
+        // https://docs.vulkan.org/tutorial/latest/_attachments/22_descriptor_layout.cpp
+        [&](uint32_t currentImage) {
+            // void updateUniformBuffer(Vulkan::UniformBufferManager & manager, Vulkan::SwapChain & swapChain, uint32_t currentImage) {
+            static auto startTime = std::chrono::high_resolution_clock::now();
+
+            auto currentTime = std::chrono::high_resolution_clock::now();
+            float time = std::chrono::duration<float>(currentTime - startTime).count();
+
+
+            // チュートリアル用マジックナンバー祭り
+            Vulkan::UniformBufferObject ubo{};
+
+            // チュートリアル用、変換
+            // https://docs.vulkan.org/tutorial/latest/05_Uniform_buffers/00_Descriptor_set_layout_and_buffer.html
+            // Intellisenseではエラーになるが、ビルドは通る（glmがモジュール正式対応していないせい？）
+            ubo.model = glm::ext::rotate(glm::mat4(1.0f), time * glm::radians(90.0f), glm::vec3(0.0f, 0.0f, 1.0f));
+
+            ubo.view = glm::ext::lookAt(glm::vec3(2.0f, 2.0f, 2.0f), glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3(0.0f, 0.0f, 1.0f));
+            ubo.proj = glm::ext::perspective(glm::radians(45.0f), static_cast<float>(vulkan.getSwapChain().getSwapChainExtent().width) / static_cast<float>(vulkan.getSwapChain().getSwapChainExtent().height), 0.1f, 10.0f);
+
+            // GLMは元々OpenGL用に設計されたもので、クリップ座標のY座標が反転している
+            ubo.proj[1][1] *= -1;
+
+            // UBOをこのように使用するのは、頻繁に変化する値をシェーダーに渡す最も効率的な方法ではありません。
+            // 小さなデータバッファをシェーダーに渡すより効率的な方法は、プッシュ定数です。
+            // これについては、今後の章で取り上げる予定です。
+            std::memcpy(vulkan.getUniformBufferManager().getUniformBufferMapped(currentImage), &ubo, sizeof(ubo));
+        },
+
         // チュートリアルのrecordCommandBuffer
         [&](uint32_t imageIndex) {
             auto& commandBuffer = vulkan.getRendering().getCurrentCommandBuffer();
@@ -67,6 +106,14 @@ void drawTriangleTutorial(Vulkan::Vulkan& vulkan, Vulkan::VertexManager& vertexM
 
             commandBuffer.bindVertexBuffers(0, *vertexManager.getVertexBuffer(), { 0 });
             commandBuffer.bindIndexBuffer(*vertexManager.getIndexBuffer(), 0, vertexManager.getIndexType());
+            
+
+            commandBuffer.bindDescriptorSets(
+                vk::PipelineBindPoint::eGraphics,
+                vulkan.getGraphicsPipeline().getPipelineLayout(),
+                0,
+                *vulkan.getDescriptor().getDescriptorSet(vulkan.getRendering().getCurrentFrame()),
+                nullptr);
 
             // Vulkanにインデックスバッファを使用するよう指示
             //  本来1つのinstanceを引数にとるオーバーロードがあるべき
@@ -154,9 +201,23 @@ int main()
         // 頂点再利用のためのインデックス。これ自分で書くの？？？？
         {0, 1, 2, 2, 3, 0}
     );
-    
 
-    drawTriangleTutorial(vulkan, vertexManager);
+    
+    // drawTriangleTutorial(vulkan, vertexManager);
+
+    
+    // 別スレッドを作る
+    window.emplaceThread(
+        [&](std::stop_token token) {
+            while (!token.stop_requested()) {
+                // 適当に待ちながら描画する
+                std::this_thread::sleep_for(std::chrono::milliseconds(33));
+                // std::cout << "別スレッド" << std::endl;
+                drawTriangleTutorial(vulkan, vertexManager);
+            }
+        }
+    );
+    
 
 
     window.waitUntilClose();

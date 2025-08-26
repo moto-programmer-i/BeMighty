@@ -11,9 +11,8 @@ import <cstdint>;
 
 import std;
 
+import vulkan_hpp;
 
-// Deviceでimportされているので不要？もしくはvulkan_hppモジュールの問題かも
-// import vulkan_hpp;
 
 import :Settings;
 import :Device;
@@ -22,9 +21,9 @@ import :SwapChain;
 namespace Vulkan {
 	export class Rendering {
 	public:
-		Rendering(Device& device, SwapChain& swapChain):
+		Rendering(Device& device, SwapChain& swapChain, const uint32_t maxFrames):
             // なぜかここで初期化しなければいけない
-            device(device), swapChain(swapChain)
+            device(device), swapChain(swapChain), maxFrames(maxFrames)
         {
             // 設定をどこまでだすのが適切か不明
             vk::CommandPoolCreateInfo poolInfo{
@@ -36,7 +35,7 @@ namespace Vulkan {
             vk::CommandBufferAllocateInfo allocInfo{
                 .commandPool = commandPool,
                 .level = vk::CommandBufferLevel::ePrimary,
-                .commandBufferCount = MAX_FRAMES_IN_FLIGHT
+                .commandBufferCount = maxFrames
             };
             commandBuffers = vk::raii::CommandBuffers(device.getDevice(), allocInfo);
             
@@ -48,7 +47,7 @@ namespace Vulkan {
                 presentCompleteSemaphore.emplace_back(device.getDevice(), vk::SemaphoreCreateInfo());
                 renderFinishedSemaphore.emplace_back(device.getDevice(), vk::SemaphoreCreateInfo());
             }
-            for (size_t i = 0; i < MAX_FRAMES_IN_FLIGHT; i++) {
+            for (size_t i = 0; i < maxFrames; i++) {
                 inFlightFences.emplace_back(device.getDevice(), vk::FenceCreateInfo{ .flags = vk::FenceCreateFlagBits::eSignaled });
             }
 		}
@@ -93,8 +92,9 @@ namespace Vulkan {
         /// <summary>
         /// 1フレームを描画
         /// </summary>
+        /// <param name="preReset">resetFencesなどをする直前の処理</param>
         /// <param name="recordCommandBuffer">imageIndexを使って描画するコマンド</param>
-        void drawFrame(std::function<void(uint32_t)> recordCommandBuffer) {
+        void drawFrame(std::function<void(uint32_t)> preReset, std::function<void(uint32_t)> recordCommandBuffer) {
             // ウィンドウ最小化のときの正しい挙動が不明
 
             // 前のコマンドが終了するまで待つ
@@ -127,6 +127,9 @@ namespace Vulkan {
             if (result != vk::Result::eSuccess && result != vk::Result::eSuboptimalKHR) {
                 throw std::runtime_error("failed to acquire swap chain image!");
             }
+
+            // reset前の処理
+            preReset(currentFrame);
 
             device.getDevice().resetFences(*inFlightFences[currentFrame]);
             commandBuffers[currentFrame].reset();
@@ -181,7 +184,11 @@ namespace Vulkan {
 
             // 次のフレームに進む
             semaphoreIndex = (semaphoreIndex + 1) % presentCompleteSemaphore.size();
-            currentFrame = (currentFrame + 1) % MAX_FRAMES_IN_FLIGHT;
+            currentFrame = (currentFrame + 1) % maxFrames;
+        }
+
+        uint32_t getCurrentFrame() {
+            return currentFrame;
         }
 
         vk::raii::CommandBuffer& getCurrentCommandBuffer() {
@@ -192,7 +199,9 @@ namespace Vulkan {
             return commandPool;
         }
 
-        static constexpr int MAX_FRAMES_IN_FLIGHT = 2;
+        uint32_t getMaxFrames() {
+            return maxFrames;
+        }
 
 	private:
         Device& device;
@@ -202,6 +211,7 @@ namespace Vulkan {
         std::vector <vk::raii::Semaphore> presentCompleteSemaphore;
         std::vector <vk::raii::Semaphore> renderFinishedSemaphore;
         std::vector <vk::raii::Fence> inFlightFences;
+        int maxFrames;
         uint32_t currentFrame = 0;
         uint32_t semaphoreIndex = 0;
 	};

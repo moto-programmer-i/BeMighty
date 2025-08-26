@@ -17,6 +17,7 @@ import glm;
 import vulkan_hpp;
 import :Device;
 import :Rendering;
+import :Buffer;
 
 
 namespace Vulkan {
@@ -51,13 +52,13 @@ namespace Vulkan {
             vk::DeviceSize bufferSize = sizeof(vertices[0]) * vertices.size();
             vk::raii::Buffer stagingBuffer({});
             vk::raii::DeviceMemory stagingBufferMemory({});
-            createBuffer(bufferSize, vk::BufferUsageFlagBits::eTransferSrc, vk::MemoryPropertyFlagBits::eHostVisible | vk::MemoryPropertyFlagBits::eHostCoherent, stagingBuffer, stagingBufferMemory);
+            Buffer::createBuffer(device, bufferSize, vk::BufferUsageFlagBits::eTransferSrc, vk::MemoryPropertyFlagBits::eHostVisible | vk::MemoryPropertyFlagBits::eHostCoherent, stagingBuffer, stagingBufferMemory);
 
             void* dataStaging = stagingBufferMemory.mapMemory(0, bufferSize);
             std::memcpy(dataStaging, vertices.data(), bufferSize);
             stagingBufferMemory.unmapMemory();
 
-            createBuffer(bufferSize, vk::BufferUsageFlagBits::eTransferDst | vk::BufferUsageFlagBits::eVertexBuffer, vk::MemoryPropertyFlagBits::eDeviceLocal, vertexBuffer, vertexBufferMemory);
+            Buffer::createBuffer(device, bufferSize, vk::BufferUsageFlagBits::eTransferDst | vk::BufferUsageFlagBits::eVertexBuffer, vk::MemoryPropertyFlagBits::eDeviceLocal, vertexBuffer, vertexBufferMemory);
 
             // CPUからアクセスできるメモリタイプが、グラフィックカード自体が読み取るのに最適なメモリタイプではない可能性がある
             // CPUアクセス可能なメモリ上のバッファ（stagingBufferMemory）と、デバイスのローカルメモリ上が必要。
@@ -68,27 +69,7 @@ namespace Vulkan {
             createIndexbuffer();
         }
 
-        // MemoryTypeが列挙体になってないのが多分悪い
-        uint32_t findMemoryType(uint32_t typeFilter, vk::MemoryPropertyFlags properties) {
-            vk::PhysicalDeviceMemoryProperties memProperties = device.getPhysicalDevice().getMemoryProperties();
-
-            for (uint32_t i = 0; i < memProperties.memoryTypeCount; i++) {
-                if ((typeFilter & (1 << i)) && (memProperties.memoryTypes[i].propertyFlags & properties) == properties) {
-                    return i;
-                }
-            }
-
-            throw std::runtime_error("failed to find suitable memory type!");
-        }
-
-        void createBuffer(vk::DeviceSize size, vk::BufferUsageFlags usage, vk::MemoryPropertyFlags properties, vk::raii::Buffer& buffer, vk::raii::DeviceMemory& bufferMemory) {
-            vk::BufferCreateInfo bufferInfo{ .size = size, .usage = usage, .sharingMode = vk::SharingMode::eExclusive };
-            buffer = vk::raii::Buffer(device.getDevice(), bufferInfo);
-            vk::MemoryRequirements memRequirements = buffer.getMemoryRequirements();
-            vk::MemoryAllocateInfo allocInfo{ .allocationSize = memRequirements.size, .memoryTypeIndex = findMemoryType(memRequirements.memoryTypeBits, properties) };
-            bufferMemory = vk::raii::DeviceMemory(device.getDevice(), allocInfo);
-            buffer.bindMemory(bufferMemory, 0);
-        }
+        
 
         void copyBuffer(vk::raii::Buffer& srcBuffer, vk::raii::Buffer& dstBuffer, vk::DeviceSize size) {
             vk::CommandBufferAllocateInfo allocInfo{
@@ -137,13 +118,13 @@ namespace Vulkan {
 
             vk::raii::Buffer stagingBuffer({});
             vk::raii::DeviceMemory stagingBufferMemory({});
-            createBuffer(bufferSize, vk::BufferUsageFlagBits::eTransferSrc, vk::MemoryPropertyFlagBits::eHostVisible | vk::MemoryPropertyFlagBits::eHostCoherent, stagingBuffer, stagingBufferMemory);
+            Buffer::createBuffer(device, bufferSize, vk::BufferUsageFlagBits::eTransferSrc, vk::MemoryPropertyFlagBits::eHostVisible | vk::MemoryPropertyFlagBits::eHostCoherent, stagingBuffer, stagingBufferMemory);
 
             void* data = stagingBufferMemory.mapMemory(0, bufferSize);
             std::memcpy(data, indices.data(), (size_t)bufferSize);
             stagingBufferMemory.unmapMemory();
 
-            createBuffer(bufferSize, vk::BufferUsageFlagBits::eTransferDst | vk::BufferUsageFlagBits::eIndexBuffer, vk::MemoryPropertyFlagBits::eDeviceLocal, indexBuffer, indexBufferMemory);
+            Buffer::createBuffer(device, bufferSize, vk::BufferUsageFlagBits::eTransferDst | vk::BufferUsageFlagBits::eIndexBuffer, vk::MemoryPropertyFlagBits::eDeviceLocal, indexBuffer, indexBufferMemory);
 
             copyBuffer(stagingBuffer, indexBuffer, bufferSize);
         }

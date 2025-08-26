@@ -9,6 +9,8 @@ namespace Vulkan {
 	// 面倒なので全体的に設定用のクラス。でかくなりすぎたら変更するかも
 	export class Settings {
 	public:
+		static constexpr std::uint32_t DEFAULT_MAX_FRAMES_IN_FLIGHT = 2;
+
 
 		// 現在はチュートリアルの値を初期値としている
 		// https://docs.vulkan.org/tutorial/latest/_attachments/07_image_views.cpp

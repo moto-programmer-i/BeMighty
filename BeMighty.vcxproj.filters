@@ -66,5 +66,11 @@
     <ClCompile Include="vulkan\Vulkan.Vertex.ixx">
       <Filter>ソース ファイル</Filter>
     </ClCompile>
+    <ClCompile Include="vulkan\Vulkan.Buffer.ixx">
+      <Filter>ソース ファイル</Filter>
+    </ClCompile>
+    <ClCompile Include="vulkan\Vulkan.Descriptor.ixx">
+      <Filter>ソース ファイル</Filter>
+    </ClCompile>
   </ItemGroup>
 </Project>

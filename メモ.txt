@@ -1,17 +1,11 @@
 ﻿■作業
-	意味不明のプログラムの把握
-	コマンドプロンプトの大量の警告
+	
 
 ■未来の作業
 	glmがC++のモジュールに正式対応されたら導入
 
-■C++
-	文字列はstring_viewで扱う
-	https://yohhoy.hatenadiary.jp/entry/20171113/p1
-
-	push_backではなく、emplace_backを使う
-	https://zenn.dev/mafafa/articles/370875167e4a3a
-	https://cpprefjp.github.io/reference/vector/vector/emplace_back.html
+■できたらする
+	プロジェクトファイルがVULKAN_SDKを勝手に置き換えてしまう
 
 
 ■コマンドプロンプト
@@ -20,20 +14,12 @@
 
 	バッチファイルのときだけ有効にしたい
 
-■Vulkan
-	CPUからアクセスできるメモリタイプが、グラフィックカード自体が読み取るのに最適なメモリタイプではない可能性がある
-	実際のアプリケーションでは、vkAllocateMemoryすべてのバッファを個別に呼び出す必要はない
-	同時メモリ割り当ての最大数はmaxMemoryAllocationCount物理デバイスの制限によって制限される
-	多数のオブジェクトに同時にメモリを割り当てる適切な方法は、単一の割り当てを複数の異なるオブジェクトに分割する
-	カスタムアロケータを作成することです。
-	https://docs.vulkan.org/tutorial/latest/04_Vertex_buffers/02_Staging_buffer.html
+■C++
+	文字列はstring_viewで扱う
+	https://yohhoy.hatenadiary.jp/entry/20171113/p1
 
-	バッファなどの複数のリソースを単一のメモリ割り当てから割り当てるべきであると既に説明しましたが、実際にはさらに一歩進む必要があります。 
-	ドライバ開発者は、頂点バッファやインデックスバッファなどの複数のバッファを単一のバッファに格納しVkBufferなどのコマンドで
-	オフセットを使用するvkCmdBindVertexBuffersことも推奨しています。
-	その利点は、データがより近くなるため、その場合データがキャッシュフレンドリーになることです。
-	同じレンダリング操作中に使用されない場合は、データがリフレッシュされるという条件で、複数のリソースに同じメモリチャンクを再利用することさえ可能です。
-	これはエイリアシングと呼ばれ、一部の Vulkan 関数には、これを指定する明示的なフラグがあります。
-	https://docs.vulkan.org/tutorial/latest/04_Vertex_buffers/03_Index_buffer.html
+	push_backではなく、emplace_backを使う。参照を返しているので使う
+	https://zenn.dev/mafafa/articles/370875167e4a3a
+	https://cpprefjp.github.io/reference/vector/vector/emplace_back.html
 
 	
