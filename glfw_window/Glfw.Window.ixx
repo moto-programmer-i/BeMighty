@@ -108,9 +108,8 @@ namespace Glfw {
         /// </summary>
         /// <typeparam name="...Args"></typeparam>
         /// <param name="...args">std::jthreadのコンストラクタの引数</param>
-        template <class... Args>
-        void emplaceThread(Args&&... args) {
-            threads.emplace_back(args...);
+        void emplaceThread(std::function<void(std::stop_token)> argForjthread) {
+            threads.emplace_back(argForjthread);
         }
 
         void addResizeCallbacks(std::function<void(void)> resizeCallback) {
