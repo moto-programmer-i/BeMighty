@@ -155,6 +155,7 @@ namespace Vulkan {
                 .pCommandBuffers = &*commandBuffers[currentFrame],
 
                 // 実行後のセマフォの紐づけ
+                .signalSemaphoreCount = 1,
                 .pSignalSemaphores = &*renderFinishedSemaphore[imageIndex]
             };
             device.getQueue().submit(submitInfo, *inFlightFences[currentFrame]);
