@@ -85,7 +85,9 @@ namespace Vulkan {
 
                     auto features = device.template getFeatures2<vk::PhysicalDeviceFeatures2, vk::PhysicalDeviceVulkan13Features, vk::PhysicalDeviceExtendedDynamicStateFeaturesEXT>();
 
-                    bool supportsRequiredFeatures = features.template get<vk::PhysicalDeviceVulkan13Features>().dynamicRendering &&
+                    bool supportsRequiredFeatures =
+                        features.template get<vk::PhysicalDeviceFeatures2>().features.samplerAnisotropy &&
+                        features.template get<vk::PhysicalDeviceVulkan13Features>().dynamicRendering &&
                         features.template get<vk::PhysicalDeviceExtendedDynamicStateFeaturesEXT>().extendedDynamicState;
 
                     return supportsVulkan1_3 && supportsGraphics && supportsAllRequiredExtensions && supportsRequiredFeatures;
@@ -124,7 +126,7 @@ namespace Vulkan {
 
             // query for Vulkan 1.3 features
             vk::StructureChain<vk::PhysicalDeviceFeatures2, vk::PhysicalDeviceVulkan13Features, vk::PhysicalDeviceExtendedDynamicStateFeaturesEXT> featureChain = {
-                {},                               // vk::PhysicalDeviceFeatures2
+                {.features = {.samplerAnisotropy = true } },// vk::PhysicalDeviceFeatures2
 
                 // vkCmdPipelineBarrier2(): the synchronization2 feature was not enabled.の警告がでたので対処
                 // https://stackoverflow.com/a/76472644

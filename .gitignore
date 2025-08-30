@@ -48,5 +48,5 @@ x64/
 !/libraries/**/
 
 # 外部ライセンスはいつでも含める
-!LICENSE.md
+!LICENSE.*
 !copying.txt

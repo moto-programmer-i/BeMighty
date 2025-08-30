@@ -7,8 +7,8 @@ import std;
 
 import Glfw;
 
-// Deviceでimportされているので不要？もしくはvulkan_hppモジュールの問題かも
-// import vulkan_hpp;
+
+import vulkan_hpp;
 import :Settings;
 import :Device;
 
@@ -137,8 +137,7 @@ namespace Vulkan {
                 .subresourceRange = Settings::defaultImageSubresourceRange()
             };
 
-            // &imageにするよう警告がでているが、どちらが正しいか不明
-            for (auto image : swapChainImages)
+            for (auto& image : swapChainImages)
             {
                 imageViewCreateInfo.image = image;
                 swapChainImageViews.emplace_back(device.getDevice(), imageViewCreateInfo);

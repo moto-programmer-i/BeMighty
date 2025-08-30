@@ -3,6 +3,7 @@
 
 #include <memory>
 #include <chrono>
+#include <stdarg.h>
 
 
 
@@ -192,10 +193,11 @@ int main()
         vulkan.getDevice(),
         vulkan.getRendering(),
         {
-            {{-0.5f, -0.5f}, {1.0f, 0.0f, 0.0f}},
-            {{0.5f, -0.5f}, {0.0f, 1.0f, 0.0f}},
-            {{0.5f, 0.5f}, {0.0f, 0.0f, 1.0f}},
-            {{-0.5f, 0.5f}, {1.0f, 1.0f, 1.0f}}
+            // 座標、色、UV座標（1が画像のサイズ）
+            {{-0.5f, -0.5f}, {1.0f, 0.0f, 0.0f}, {1.0f, 0.0f}},
+            {{0.5f, -0.5f}, {0.0f, 1.0f, 0.0f}, {0.0f, 0.0f}},
+            {{0.5f, 0.5f}, {0.0f, 0.0f, 1.0f}, {0.0f, 1.0f}},
+            {{-0.5f, 0.5f}, {1.0f, 1.0f, 1.0f}, {1.0f, 1.0f}}
         },
 
         // 頂点再利用のためのインデックス。これ自分で書くの？？？？
@@ -205,6 +207,8 @@ int main()
     
     // drawTriangleTutorial(vulkan, vertexManager);
 
+    // Vulkan::Texture(vulkan.getDevice(), vulkan.getRendering(), "D:/VisualStudio/repository/BeMighty/textures/texture.jpg");
+    
     
     // 別スレッドを作る
     window.emplaceThread(
@@ -218,12 +222,11 @@ int main()
         }
     );
     
+    
 
 
     window.waitUntilClose();
 }
-
-
 
 
 // プログラムの実行: Ctrl + F5 または [デバッグ] > [デバッグなしで開始] メニュー

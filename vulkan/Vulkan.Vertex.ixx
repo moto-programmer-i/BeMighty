@@ -25,6 +25,7 @@ namespace Vulkan {
     export struct Vertex {
         glm::vec2 pos;
         glm::vec3 color;
+        glm::vec2 texCoord;
 
 
         // ここに書くべきなのか不明、もっと汎用的に書けないか？
@@ -32,18 +33,23 @@ namespace Vulkan {
             return { 0, sizeof(Vertex), vk::VertexInputRate::eVertex };
         }
 
-        static std::array<vk::VertexInputAttributeDescription, 2> getAttributeDescriptions() {
-            return {
+        // チュートリアルでは要素数を指定していたが、autoとto_arrayがあれば不要
+        // static std::array<vk::VertexInputAttributeDescription, 3> getAttributeDescriptions() {
+        static auto getAttributeDescriptions() {
+            return std::to_array({
+                // 先頭のindexも自動で割り振れるようにするべき
                 vk::VertexInputAttributeDescription(0, 0, vk::Format::eR32G32Sfloat, offsetof(Vertex, pos)),
-                vk::VertexInputAttributeDescription(1, 0, vk::Format::eR32G32B32Sfloat, offsetof(Vertex, color))
-            };
+                vk::VertexInputAttributeDescription(1, 0, vk::Format::eR32G32B32Sfloat, offsetof(Vertex, color)),
+                vk::VertexInputAttributeDescription(2, 0, vk::Format::eR32G32Sfloat, offsetof(Vertex, texCoord))
+            });
+            
         }
     };
 
 
     export class VertexManager {
     public:
-        VertexManager(Device& device, Rendering& rendering, std::vector<Vertex> vertices, std::vector<uint16_t> indices) :
+        VertexManager(Device& device, Rendering& rendering, std::vector<Vertex> vertices, std::vector<std::uint16_t> indices) :
             // なぜかここで初期化しなければならない
             device(device), rendering(rendering), vertices(vertices), indices(indices)
         {

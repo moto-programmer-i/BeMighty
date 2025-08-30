@@ -10,6 +10,7 @@ export import :Descriptor;
 export import :GraphicsPipeline;
 export import :Rendering;
 export import :Vertex;
+export import :Texture;
 
 
 
@@ -32,16 +33,24 @@ namespace Vulkan {
         static constexpr std::string_view vertName = "vertMain";
         static constexpr std::string_view fragName = "fragMain";
 
+        // テクスチャを自由に読み込めるようにしたいが、
+        // 今は方法が不明なのでチュートリアルからコピペ
+        static constexpr std::string_view textureFilename = "D:/VisualStudio/repository/BeMighty/textures/texture.jpg";
+
         Vulkan(Glfw::Window& window, std::uint32_t maxFrames = Settings::DEFAULT_MAX_FRAMES_IN_FLIGHT) :
+            // なぜかここで初期化しなければならない
             window(window),
             maxFrames(maxFrames),
             information(window),
             device(information.getInstance(), information.getSurface()),
             swapChain(device, information.getSurface(), window),
             uniformBufferManager(device, swapChain, maxFrames),
-            descriptor(device, uniformBufferManager),
-            graphicsPipeline(device, swapChain, descriptor, spvFilename, vertName, fragName),
-            rendering(device, swapChain, maxFrames)
+            graphicsPipeline(device, swapChain, spvFilename, vertName, fragName),
+            rendering(device, swapChain, maxFrames),
+
+            // 本来は後から追加できるべき？
+            texture(device, rendering, textureFilename),
+            descriptor(device, graphicsPipeline, uniformBufferManager, texture)
 
 #ifdef NDEBUG
 #else
@@ -89,9 +98,10 @@ namespace Vulkan {
         Device device;
         SwapChain swapChain;
         UniformBufferManager uniformBufferManager;
-        Descriptor descriptor;
         GraphicsPipeline graphicsPipeline;
         Rendering rendering;
+        Texture texture;
+        Descriptor descriptor;
 
 
 #ifdef NDEBUG

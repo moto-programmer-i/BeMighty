@@ -3,6 +3,8 @@
 
 ■未来の作業
 	glmがC++のモジュールに正式対応されたら導入
+	stbはセキュリティリスクがあり、C++モジュール対応もされないようなので代替手段が必要
+		https://github.com/nothings/stb/tree/master?tab=readme-ov-file#stb
 
 ■できたらする
 	プロジェクトファイルがVULKAN_SDKを勝手に置き換えてしまう

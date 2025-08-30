@@ -11,7 +11,6 @@ import vulkan_hpp;
 
 import :Device;
 import :SwapChain;
-import :Descriptor;
 
 import :Vertex;
 
@@ -22,7 +21,7 @@ namespace Vulkan {
 	export class GraphicsPipeline {
 	public:
 		// サンプルに合わせたが、各名前は本当は含めるべきではないかも
-		GraphicsPipeline(Device& device, SwapChain& swapChain, Descriptor& descriptor, std::string_view spvFilename, std::string_view vertName, std::string_view fragName):
+		GraphicsPipeline(Device& device, SwapChain& swapChain, std::string_view spvFilename, std::string_view vertName, std::string_view fragName):
 			// なぜか参照の初期化はここに書かなければいけない
 			device(device)
 		{	
@@ -37,6 +36,8 @@ namespace Vulkan {
 			// https://docs.vulkan.org/tutorial/latest/_attachments/18_vertex_input.cpp
 
 			// チュートリアル用のコードが混じってしまっている
+			// PipelineVertexInputStateCreateInfoを作る適切な関数を作るべきだが、
+			// 今はどうやるのがベストか不明
 			auto bindingDescription = Vertex::getBindingDescription();
 			auto attributeDescriptions = Vertex::getAttributeDescriptions();
 			vk::PipelineVertexInputStateCreateInfo vertexInputInfo{
@@ -97,10 +98,19 @@ namespace Vulkan {
 				.pDynamicStates = dynamicStates.data()
 			};
 
+			// createDescriptorSetLayout
+			std::array bindings = {
+			    // 最初の引数はbindingのindex、本当はDescriptorSetLayoutを作るstatic関数が必要
+			    vk::DescriptorSetLayoutBinding(0, vk::DescriptorType::eUniformBuffer, 1, vk::ShaderStageFlagBits::eVertex, nullptr),
+			    vk::DescriptorSetLayoutBinding(1, vk::DescriptorType::eCombinedImageSampler, 1, vk::ShaderStageFlagBits::eFragment, nullptr)
+			};
+			vk::DescriptorSetLayoutCreateInfo layoutInfo{ .bindingCount = static_cast<uint32_t>(bindings.size()), .pBindings = bindings.data() };
+			descriptorSetLayout = vk::raii::DescriptorSetLayout(device.getDevice(), layoutInfo);
+
 			vk::PipelineLayoutCreateInfo pipelineLayoutInfo{
 				// 本来は配列の長さ
 				.setLayoutCount = 1,
-				.pSetLayouts = &*descriptor.getDescriptorSetLayout(),
+				.pSetLayouts = &*descriptorSetLayout,
 				.pushConstantRangeCount = 0
 			};
 
@@ -136,6 +146,10 @@ namespace Vulkan {
 			return shaderModule;
 		}
 
+		vk::raii::DescriptorSetLayout& getDescriptorSetLayout() {
+			return descriptorSetLayout;
+		}
+
 		vk::raii::PipelineLayout& getPipelineLayout() {
 			return pipelineLayout;
 		}
@@ -147,6 +161,7 @@ namespace Vulkan {
 
 	private:
 		Device& device;
+		vk::raii::DescriptorSetLayout descriptorSetLayout = nullptr;
 		vk::raii::PipelineLayout pipelineLayout = nullptr;
 		vk::raii::Pipeline graphicsPipeline = nullptr;
 	};

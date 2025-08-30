@@ -52,7 +52,7 @@ namespace Vulkan {
             }
 		}
 
-
+        // チュートリアルではtransition_image_layout、TextureのtransitionImageLayoutと混在している
         void transitionImageLayout(
             uint32_t imageIndex,
             vk::ImageLayout oldLayout,
@@ -202,6 +202,30 @@ namespace Vulkan {
 
         uint32_t getMaxFrames() {
             return maxFrames;
+        }
+
+        
+        // std::unique_ptr<vk::raii::CommandBuffer> beginSingleTimeCommands() {
+        // チュートリアルでは↑のようになっているが、raii自体がunique_ptrみたいなものなので不適切
+        vk::raii::CommandBuffer beginSingleTimeCommands() {
+            vk::CommandBufferAllocateInfo allocInfo{ .commandPool = commandPool, .level = vk::CommandBufferLevel::ePrimary, .commandBufferCount = 1 };
+
+            // CommandBuffersからCommandBufferを作っているのが本当に必要なのか不明
+            // std::unique_ptr<vk::raii::CommandBuffer> commandBuffer = std::make_unique<vk::raii::CommandBuffer>(std::move(vk::raii::CommandBuffers(device, allocInfo).front()));
+            vk::raii::CommandBuffer commandBuffer(std::move(vk::raii::CommandBuffers(device.getDevice(), allocInfo).front()));
+
+            vk::CommandBufferBeginInfo beginInfo{ .flags = vk::CommandBufferUsageFlagBits::eOneTimeSubmit };
+            commandBuffer.begin(beginInfo);
+
+            return commandBuffer;
+        }
+
+        void endSingleTimeCommands(vk::raii::CommandBuffer& commandBuffer) {
+            commandBuffer.end();
+
+            vk::SubmitInfo submitInfo{ .commandBufferCount = 1, .pCommandBuffers = &*commandBuffer };
+            device.getQueue().submit(submitInfo, nullptr);
+            device.getQueue().waitIdle();
         }
 
 	private:
