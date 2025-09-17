@@ -75,8 +75,6 @@ namespace Vulkan {
                 .srcQueueFamilyIndex = VK_QUEUE_FAMILY_IGNORED,
                 .dstQueueFamilyIndex = VK_QUEUE_FAMILY_IGNORED,
                 .image = swapChain.getSwapChainImages()[imageIndex],
-
-                // ほかのところにあった気がする
                 .subresourceRange = Settings::defaultImageSubresourceRange()
             };
             vk::DependencyInfo dependencyInfo = {

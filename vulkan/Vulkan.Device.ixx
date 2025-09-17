@@ -51,6 +51,29 @@ namespace Vulkan {
         uint32_t& getQueueIndex() {
             return queueIndex;
         }
+
+        // https://docs.vulkan.org/tutorial/latest/_attachments/27_depth_buffering.cpp
+        vk::Format findSupportedFormat(const std::vector<vk::Format>& candidates, vk::ImageTiling tiling, vk::FormatFeatureFlags features) {
+            auto formatIt = std::ranges::find_if(candidates, [&](auto const format) {
+                vk::FormatProperties props = physicalDevice.getFormatProperties(format);
+                return (((tiling == vk::ImageTiling::eLinear) && ((props.linearTilingFeatures & features) == features)) ||
+                    ((tiling == vk::ImageTiling::eOptimal) && ((props.optimalTilingFeatures & features) == features)));
+                });
+            if (formatIt == candidates.end())
+            {
+                throw std::runtime_error("failed to find supported format!");
+            }
+            return *formatIt;
+        }
+
+        vk::Format findDepthFormat() {
+            return findSupportedFormat(
+                { vk::Format::eD32Sfloat, vk::Format::eD32SfloatS8Uint, vk::Format::eD24UnormS8Uint },
+                vk::ImageTiling::eOptimal,
+                vk::FormatFeatureFlagBits::eDepthStencilAttachment
+            );
+        }
+
         
 	private:
 		vk::raii::PhysicalDevice         physicalDevice = nullptr;

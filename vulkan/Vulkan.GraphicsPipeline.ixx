@@ -68,13 +68,24 @@ namespace Vulkan {
 				 .frontFace = vk::FrontFace::eCounterClockwise,
 
 				.depthBiasEnable = vk::False,
-				.depthBiasSlopeFactor = 1.0f,
+				// 途中でなぜかなくなった
+				// https://docs.vulkan.org/tutorial/latest/_attachments/27_depth_buffering.cpp
+				// .depthBiasSlopeFactor = 1.0f,
 				.lineWidth = 1.0f
 			};
 
 			vk::PipelineMultisampleStateCreateInfo multisampling{
 				.rasterizationSamples = vk::SampleCountFlagBits::e1,
 				.sampleShadingEnable = vk::False
+			};
+
+			// https://docs.vulkan.org/tutorial/latest/_attachments/27_depth_buffering.cpp
+			vk::PipelineDepthStencilStateCreateInfo depthStencil{
+				.depthTestEnable = vk::True,
+				.depthWriteEnable = vk::True,
+				.depthCompareOp = vk::CompareOp::eLess,
+				.depthBoundsTestEnable = vk::False,
+				.stencilTestEnable = vk::False
 			};
 
 			vk::PipelineColorBlendAttachmentState colorBlendAttachment{
@@ -116,21 +127,30 @@ namespace Vulkan {
 
 			pipelineLayout = vk::raii::PipelineLayout(device.getDevice(), pipelineLayoutInfo);
 
+			// https://docs.vulkan.org/tutorial/latest/_attachments/27_depth_buffering.cpp
+			vk::Format depthFormat = device.findDepthFormat();
 
 			// https://docs.vulkan.org/tutorial/latest/03_Drawing_a_triangle/02_Graphics_pipeline_basics/03_Render_passes.html
 			vk::PipelineRenderingCreateInfo pipelineRenderingCreateInfo{
 				// 上のattachmentCountと連動させる必要があるのかは不明
 				.colorAttachmentCount = 1,
-				.pColorAttachmentFormats = &swapChain.getSwapChainImageFormat()
+				.pColorAttachmentFormats = &swapChain.getSwapChainImageFormat(),
+				.depthAttachmentFormat = depthFormat
 			};
 			vk::GraphicsPipelineCreateInfo pipelineInfo{
 				.pNext = &pipelineRenderingCreateInfo,
 				.stageCount = std::size(shaderStages),
 				.pStages = shaderStages,
-				.pVertexInputState = &vertexInputInfo, .pInputAssemblyState = &inputAssembly,
-				.pViewportState = &viewportState, .pRasterizationState = &rasterizer,
-				.pMultisampleState = &multisampling, .pColorBlendState = &colorBlending,
-				.pDynamicState = &dynamicState, .layout = pipelineLayout, .renderPass = nullptr
+				.pVertexInputState = &vertexInputInfo,
+				.pInputAssemblyState = &inputAssembly,
+				.pViewportState = &viewportState,
+				.pRasterizationState = &rasterizer,
+				.pMultisampleState = &multisampling,
+				.pDepthStencilState = &depthStencil,
+				.pColorBlendState = &colorBlending,
+				.pDynamicState = &dynamicState,
+				.layout = pipelineLayout,
+				.renderPass = nullptr
 			};
 
 			graphicsPipeline = vk::raii::Pipeline(device.getDevice(), nullptr, pipelineInfo);

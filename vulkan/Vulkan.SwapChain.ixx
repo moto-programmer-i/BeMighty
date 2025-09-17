@@ -11,6 +11,7 @@ import Glfw;
 import vulkan_hpp;
 import :Settings;
 import :Device;
+import :Image;
 
 // https://docs.vulkan.org/tutorial/latest/_attachments/06_swap_chain_creation.cpp
 // からコピペ
@@ -26,6 +27,8 @@ namespace Vulkan {
             createSwapChain();
 
             createImageViews();
+
+            createDepthResources();
 
             // チュートリアルではframebufferResizedの状態を管理していたが、
             // SwapChainを再作成すればよいだけにみえるので変更
@@ -114,6 +117,22 @@ namespace Vulkan {
             cleanupSwapChain();
             createSwapChain();
             createImageViews();
+            createDepthResources();
+        }
+
+        vk::raii::Image& getDepthImage() {
+            return depthImage;
+        }
+
+        vk::raii::ImageView& getDepthImageView() {
+            return depthImageView;
+        }
+
+        // どこからも呼ばれていない謎の関数
+        // https://docs.vulkan.org/tutorial/latest/_attachments/27_depth_buffering.cpp
+        // https://docs.vulkan.org/tutorial/latest/07_Depth_buffering.html#_depth_image_and_view
+        bool hasStencilComponent(vk::Format format) {
+            return format == vk::Format::eD32SfloatS8Uint || format == vk::Format::eD24UnormS8Uint;
         }
 
 
@@ -126,6 +145,9 @@ namespace Vulkan {
 		vk::Format swapChainImageFormat = vk::Format::eUndefined;
 		vk::Extent2D swapChainExtent;
 		std::vector<vk::raii::ImageView> swapChainImageViews;
+        vk::raii::Image depthImage = nullptr;
+        vk::raii::DeviceMemory depthImageMemory = nullptr;
+        vk::raii::ImageView depthImageView = nullptr;
 
         void createImageViews() {
             swapChainImageViews.clear();
@@ -144,6 +166,11 @@ namespace Vulkan {
             }
         }
 
+        void createDepthResources() {
+            vk::Format depthFormat = device.findDepthFormat();
+            Image::createImage(device, swapChainExtent.width, swapChainExtent.height, depthFormat, vk::ImageTiling::eOptimal, vk::ImageUsageFlagBits::eDepthStencilAttachment, vk::MemoryPropertyFlagBits::eDeviceLocal, depthImage, depthImageMemory);
+            depthImageView = Image::createImageView(device, depthImage, depthFormat, vk::ImageAspectFlagBits::eDepth);
+        }
 	};
 }
 

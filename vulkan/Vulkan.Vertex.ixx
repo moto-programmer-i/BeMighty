@@ -23,7 +23,7 @@ import :Buffer;
 namespace Vulkan {
     // この構造体名で本当に良いのか不明（2次元のpos限定なのか？）
     export struct Vertex {
-        glm::vec2 pos;
+        glm::vec3 pos;
         glm::vec3 color;
         glm::vec2 texCoord;
 
@@ -38,7 +38,7 @@ namespace Vulkan {
         static auto getAttributeDescriptions() {
             return std::to_array({
                 // 先頭のindexも自動で割り振れるようにするべき
-                vk::VertexInputAttributeDescription(0, 0, vk::Format::eR32G32Sfloat, offsetof(Vertex, pos)),
+                vk::VertexInputAttributeDescription(0, 0, vk::Format::eR32G32B32Sfloat, offsetof(Vertex, pos)),
                 vk::VertexInputAttributeDescription(1, 0, vk::Format::eR32G32B32Sfloat, offsetof(Vertex, color)),
                 vk::VertexInputAttributeDescription(2, 0, vk::Format::eR32G32Sfloat, offsetof(Vertex, texCoord))
             });

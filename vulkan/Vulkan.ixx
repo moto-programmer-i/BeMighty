@@ -6,6 +6,7 @@ export import :Information;
 export import :Device;
 export import :SwapChain;
 export import :Buffer;
+export import :Image;
 export import :Descriptor;
 export import :GraphicsPipeline;
 export import :Rendering;
@@ -44,7 +45,7 @@ namespace Vulkan {
             information(window),
             device(information.getInstance(), information.getSurface()),
             swapChain(device, information.getSurface(), window),
-            uniformBufferManager(device, swapChain, maxFrames),
+            uniformBufferManager(device, maxFrames),
             graphicsPipeline(device, swapChain, spvFilename, vertName, fragName),
             rendering(device, swapChain, maxFrames),
 

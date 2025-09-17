@@ -1,9 +1,5 @@
-﻿// Vulkan::Vertexと同じ型である必要がある。
-// なぜチュートリアルでは微妙に変数の名前が違うのかは不明。
-
-
-struct VSInput {
-    float2 inPosition;
+﻿struct VSInput {
+    float3 inPosition;
     float3 inColor;
     float2 inTexCoord;
 };
@@ -18,13 +14,15 @@ ConstantBuffer<UniformBuffer> ubo;
 struct VSOutput
 {
     float4 pos : SV_Position;
+    float3 fragColor;
     float2 fragTexCoord;
 };
 
 [shader("vertex")]
 VSOutput vertMain(VSInput input) {
     VSOutput output;
-    output.pos = mul(ubo.proj, mul(ubo.view, mul(ubo.model, float4(input.inPosition, 0.0, 1.0))));
+    output.pos = mul(ubo.proj, mul(ubo.view, mul(ubo.model, float4(input.inPosition, 1.0))));
+    output.fragColor = input.inColor;
     output.fragTexCoord = input.inTexCoord;
     return output;
 }

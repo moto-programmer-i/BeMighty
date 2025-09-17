@@ -11,20 +11,12 @@ export module Vulkan:Texture;
 import std;
 
 
-// #define GLM_FORCE_RADIANS
-// import glm;
-// IntelliSense上ではこっちのほうが便利だが、ビルドが通らなくなる
-// #include <glm/glm.hpp>
-
-
-
 import vulkan_hpp;
 import :Settings;
 import :Device;
 import :Buffer;
 import :Rendering;
-
-// import :SwapChain;
+import :Image;
 
 
 namespace Vulkan {
@@ -49,26 +41,16 @@ namespace Vulkan {
 
             stbi_image_free(pixels);
 
-            createImage(device, texWidth, texHeight, vk::Format::eR8G8B8A8Srgb, vk::ImageTiling::eOptimal, vk::ImageUsageFlagBits::eTransferDst | vk::ImageUsageFlagBits::eSampled, vk::MemoryPropertyFlagBits::eDeviceLocal, textureImage, textureImageMemory);
+            Image::createImage(device, texWidth, texHeight, vk::Format::eR8G8B8A8Srgb, vk::ImageTiling::eOptimal, vk::ImageUsageFlagBits::eTransferDst | vk::ImageUsageFlagBits::eSampled, vk::MemoryPropertyFlagBits::eDeviceLocal, textureImage, textureImageMemory);
 
             transitionImageLayout(rendering, textureImage, vk::ImageLayout::eUndefined, vk::ImageLayout::eTransferDstOptimal);
             copyBufferToImage(rendering, stagingBuffer, textureImage, static_cast<uint32_t>(texWidth), static_cast<uint32_t>(texHeight));
             transitionImageLayout(rendering, textureImage, vk::ImageLayout::eTransferDstOptimal, vk::ImageLayout::eShaderReadOnlyOptimal);
 
-            textureImageView = createImageView(device, textureImage, vk::Format::eR8G8B8A8Srgb);
+            textureImageView = Image::createImageView(device, textureImage, vk::Format::eR8G8B8A8Srgb, vk::ImageAspectFlagBits::eColor);
             textureSampler = createTextureSampler(device);
         }
 
-        static vk::raii::ImageView createImageView(Device& device, vk::raii::Image& image, vk::Format format) {
-            vk::ImageViewCreateInfo viewInfo{
-                .image = image,
-                .viewType = vk::ImageViewType::e2D,
-                .format = format,
-                // .subresourceRange = { vk::ImageAspectFlagBits::eColor, 0, 1, 0, 1 }
-                .subresourceRange = Settings::defaultImageSubresourceRange()
-            };
-            return vk::raii::ImageView(device.getDevice(), viewInfo);
-        }
 
         // 本当はSamplerCreateInfoの初期設定をするBuilderを用意するべき
         static vk::raii::Sampler createTextureSampler(Device& device) {
@@ -94,6 +76,8 @@ namespace Vulkan {
             return vk::raii::Sampler(device.getDevice(), samplerInfo);
         }
 
+        
+
 
         vk::raii::ImageView& getTextureImageView() {
             return textureImageView;
@@ -108,21 +92,6 @@ namespace Vulkan {
         vk::raii::DeviceMemory textureImageMemory = nullptr;
         vk::raii::ImageView textureImageView = nullptr;
         vk::raii::Sampler textureSampler = nullptr;
-
-        void createImage(Device& device, uint32_t width, uint32_t height, vk::Format format, vk::ImageTiling tiling, vk::ImageUsageFlags usage, vk::MemoryPropertyFlags properties, vk::raii::Image& image, vk::raii::DeviceMemory& imageMemory) {
-            vk::ImageCreateInfo imageInfo{ .imageType = vk::ImageType::e2D, .format = format,
-                                          .extent = {width, height, 1}, .mipLevels = 1, .arrayLayers = 1,
-                                          .samples = vk::SampleCountFlagBits::e1, .tiling = tiling,
-                                          .usage = usage, .sharingMode = vk::SharingMode::eExclusive };
-
-            image = vk::raii::Image(device.getDevice(), imageInfo);
-
-            vk::MemoryRequirements memRequirements = image.getMemoryRequirements();
-            vk::MemoryAllocateInfo allocInfo{ .allocationSize = memRequirements.size,
-                                             .memoryTypeIndex = Buffer::findMemoryType(device, memRequirements.memoryTypeBits, properties) };
-            imageMemory = vk::raii::DeviceMemory(device.getDevice(), allocInfo);
-            image.bindMemory(imageMemory, 0);
-        }
 
         void transitionImageLayout(Rendering& rendering, const vk::raii::Image& image, vk::ImageLayout oldLayout, vk::ImageLayout newLayout) {
             auto commandBuffer = rendering.beginSingleTimeCommands();

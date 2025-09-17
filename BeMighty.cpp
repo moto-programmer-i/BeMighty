@@ -5,6 +5,13 @@
 #include <chrono>
 #include <stdarg.h>
 
+// なぜかvulkan_hppに入っていない
+#include <vulkan/vulkan_core.h>
+
+// 効いてるのかどうか不明
+// https://docs.vulkan.org/tutorial/latest/07_Depth_buffering.html#_depth_image_and_view
+#define GLM_FORCE_DEPTH_ZERO_TO_ONE
+
 
 
 
@@ -73,16 +80,55 @@ void drawTriangleTutorial(Vulkan::Vulkan& vulkan, Vulkan::VertexManager& vertexM
             );
 
 
+            // https://docs.vulkan.org/tutorial/latest/_attachments/27_depth_buffering.cpp
+            // Transition depth image to depth attachment optimal layout
+            vk::ImageMemoryBarrier2 depthBarrier = {
+                .srcStageMask = vk::PipelineStageFlagBits2::eTopOfPipe,
+                .srcAccessMask = {},
+                .dstStageMask = vk::PipelineStageFlagBits2::eEarlyFragmentTests | vk::PipelineStageFlagBits2::eLateFragmentTests,
+                .dstAccessMask = vk::AccessFlagBits2::eDepthStencilAttachmentRead | vk::AccessFlagBits2::eDepthStencilAttachmentWrite,
+                .oldLayout = vk::ImageLayout::eUndefined,
+                .newLayout = vk::ImageLayout::eDepthStencilAttachmentOptimal,
+                .srcQueueFamilyIndex = VK_QUEUE_FAMILY_IGNORED,
+                .dstQueueFamilyIndex = VK_QUEUE_FAMILY_IGNORED,
+                .image = vulkan.getSwapChain().getDepthImage(),
+                .subresourceRange = {
+                    // 他とaspectMaskだけ違う
+                    .aspectMask = vk::ImageAspectFlagBits::eDepth,
+                    .baseMipLevel = 0,
+                    .levelCount = 1,
+                    .baseArrayLayer = 0,
+                    .layerCount = 1
+                }
+            };
+            vk::DependencyInfo depthDependencyInfo = {
+                .dependencyFlags = {},
+                .imageMemoryBarrierCount = 1,
+                .pImageMemoryBarriers = &depthBarrier
+            };
+            commandBuffer.pipelineBarrier2(depthDependencyInfo);
+
+
 
             vk::ClearValue clearColor = vk::ClearColorValue(
                 // 黒色
                 0.0f, 0.0f, 0.0f, 1.0f);
-            vk::RenderingAttachmentInfo attachmentInfo = {
+            vk::ClearValue clearDepth = vk::ClearDepthStencilValue(1.0f, 0);
+
+            vk::RenderingAttachmentInfo colorAttachmentInfo = {
                 .imageView = vulkan.getSwapChain().getSwapChainImageViews()[imageIndex],
                 .imageLayout = vk::ImageLayout::eColorAttachmentOptimal,
                 .loadOp = vk::AttachmentLoadOp::eClear,
                 .storeOp = vk::AttachmentStoreOp::eStore,
                 .clearValue = clearColor
+            };
+
+            vk::RenderingAttachmentInfo depthAttachmentInfo = {
+               .imageView = vulkan.getSwapChain().getDepthImageView(),
+               .imageLayout = vk::ImageLayout::eDepthStencilAttachmentOptimal,
+               .loadOp = vk::AttachmentLoadOp::eClear,
+               .storeOp = vk::AttachmentStoreOp::eDontCare,
+               .clearValue = clearDepth
             };
 
             // チュートリアル用のコードなので、マジックナンバーでも許容
@@ -92,7 +138,8 @@ void drawTriangleTutorial(Vulkan::Vulkan& vulkan, Vulkan::VertexManager& vertexM
 
                 // 本来は配列と要素数だが、1個しかないのでこう書くしかない
                 .colorAttachmentCount = 1,
-                .pColorAttachments = &attachmentInfo
+                .pColorAttachments = &colorAttachmentInfo,
+                .pDepthAttachment = &depthAttachmentInfo
             };
 
 
@@ -194,14 +241,22 @@ int main()
         vulkan.getRendering(),
         {
             // 座標、色、UV座標（1が画像のサイズ）
-            {{-0.5f, -0.5f}, {1.0f, 0.0f, 0.0f}, {1.0f, 0.0f}},
-            {{0.5f, -0.5f}, {0.0f, 1.0f, 0.0f}, {0.0f, 0.0f}},
-            {{0.5f, 0.5f}, {0.0f, 0.0f, 1.0f}, {0.0f, 1.0f}},
-            {{-0.5f, 0.5f}, {1.0f, 1.0f, 1.0f}, {1.0f, 1.0f}}
+            {{-0.5f, -0.5f, 0.0f}, {1.0f, 0.0f, 0.0f}, {0.0f, 0.0f}},
+            {{0.5f, -0.5f, 0.0f}, {0.0f, 1.0f, 0.0f}, {1.0f, 0.0f}},
+            {{0.5f, 0.5f, 0.0f}, {0.0f, 0.0f, 1.0f}, {1.0f, 1.0f}},
+            {{-0.5f, 0.5f, 0.0f}, {1.0f, 1.0f, 1.0f}, {0.0f, 1.0f}},
+
+            {{-0.5f, -0.5f, -0.5f}, {1.0f, 0.0f, 0.0f}, {0.0f, 0.0f}},
+            {{0.5f, -0.5f, -0.5f}, {0.0f, 1.0f, 0.0f}, {1.0f, 0.0f}},
+            {{0.5f, 0.5f, -0.5f}, {0.0f, 0.0f, 1.0f}, {1.0f, 1.0f}},
+            {{-0.5f, 0.5f, -0.5f}, {1.0f, 1.0f, 1.0f}, {0.0f, 1.0f}}
         },
 
         // 頂点再利用のためのインデックス。これ自分で書くの？？？？
-        {0, 1, 2, 2, 3, 0}
+        {
+            0, 1, 2, 2, 3, 0,
+            4, 5, 6, 6, 7, 4
+        }
     );
 
     

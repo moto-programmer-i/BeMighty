@@ -21,7 +21,6 @@ import glm;
 // ここはなぜかvulkan_hppをimportしないとIntelisenseエラーになる
 import vulkan_hpp;
 import :Device;
-import :SwapChain;
 
 
 namespace Vulkan {
@@ -63,9 +62,9 @@ namespace Vulkan {
     
     export class UniformBufferManager {
     public:
-        UniformBufferManager(Device& device, SwapChain& swapChain, const uint32_t size):
+        UniformBufferManager(Device& device, const uint32_t size):
             // なぜかここで初期化しなければならない
-            swapChain(swapChain), size(size)
+            size(size)
         {
             uniformBuffers.clear();
             uniformBuffersMemory.clear();
@@ -105,7 +104,6 @@ namespace Vulkan {
         }
 
     private:
-        SwapChain& swapChain;
         uint32_t size;
         std::vector<vk::raii::Buffer> uniformBuffers;
         std::vector<vk::raii::DeviceMemory> uniformBuffersMemory;
