@@ -50,3 +50,4 @@ x64/
 # 外部ライセンスはいつでも含める
 !LICENSE.*
 !copying.txt
+!copyright

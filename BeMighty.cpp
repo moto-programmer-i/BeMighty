@@ -12,6 +12,9 @@
 // https://docs.vulkan.org/tutorial/latest/07_Depth_buffering.html#_depth_image_and_view
 #define GLM_FORCE_DEPTH_ZERO_TO_ONE
 
+#define TINYOBJLOADER_IMPLEMENTATION
+#include <tiny_obj_loader.h>
+
 
 
 
