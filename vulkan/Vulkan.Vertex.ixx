@@ -5,13 +5,20 @@
 // https://learn.microsoft.com/ja-jp/cpp/cpp/tutorial-import-stl-named-module?view=msvc-170#introduction-to-standard-library-modules
 import <cstddef>;
 
+#define GLM_ENABLE_EXPERIMENTAL
+#include <glm/glm.hpp>
+#include <glm/gtc/matrix_transform.hpp>
+#include <glm/gtx/hash.hpp>
+
 export module Vulkan:Vertex;
 
 
 
 import std;
 
-import glm;
+
+// importだとhashがどうしても適用できなかった
+// import glm;
 
 // ここはなぜかvulkan_hppをimportしないとエラーになる
 import vulkan_hpp;
@@ -44,16 +51,20 @@ namespace Vulkan {
             });
             
         }
+
+        bool operator==(const Vertex& other) const {
+            return pos == other.pos && color == other.color && texCoord == other.texCoord;
+        }
     };
 
 
     export class VertexManager {
     public:
-        VertexManager(Device& device, Rendering& rendering, std::vector<Vertex> vertices, std::vector<std::uint16_t> indices) :
+        VertexManager(Device& device, Rendering& rendering, std::vector<Vertex> vertices, std::vector<std::uint32_t> indices) :
             // なぜかここで初期化しなければならない
             device(device), rendering(rendering), vertices(vertices), indices(indices)
         {
-            
+            // createVertexBuffer
             // インスタンスをバッファにコピーする汎用関数が必要？
             vk::DeviceSize bufferSize = sizeof(vertices[0]) * vertices.size();
             vk::raii::Buffer stagingBuffer({});
@@ -102,7 +113,7 @@ namespace Vulkan {
         }
 
 
-        std::vector<uint16_t>& getIndices() {
+        std::vector<uint32_t>& getIndices() {
             return indices;
         }
 
@@ -117,7 +128,7 @@ namespace Vulkan {
         vk::raii::Buffer indexBuffer = nullptr;
         vk::raii::DeviceMemory indexBufferMemory = nullptr;
         std::vector<Vertex> vertices;
-        std::vector<uint16_t> indices;
+        std::vector<uint32_t> indices;
 
         void createIndexbuffer() {
             vk::DeviceSize bufferSize = sizeof(indices[0]) * indices.size();
@@ -136,4 +147,12 @@ namespace Vulkan {
         }
     };
 }
+
+// std::unordered_mapのキーにするには、なぜか外でhashを定義しなければいけない
+// https://docs.vulkan.org/tutorial/latest/_attachments/28_model_loading.cpp
+template<> struct std::hash<Vulkan::Vertex> {
+    size_t operator()(Vulkan::Vertex const& vertex) const noexcept {
+        return ((hash<glm::vec3>()(vertex.pos) ^ (hash<glm::vec3>()(vertex.color) << 1)) >> 1) ^ (hash<glm::vec2>()(vertex.texCoord) << 1);
+    }
+};
 

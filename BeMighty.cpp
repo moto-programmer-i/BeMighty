@@ -12,9 +12,6 @@
 // https://docs.vulkan.org/tutorial/latest/07_Depth_buffering.html#_depth_image_and_view
 #define GLM_FORCE_DEPTH_ZERO_TO_ONE
 
-#define TINYOBJLOADER_IMPLEMENTATION
-#include <tiny_obj_loader.h>
-
 
 
 
@@ -23,15 +20,15 @@ import Glfw;
 import Vulkan;
 
 
-// Intellisenseではうまく読み込まれない
-import glm;
-
-
 
 constexpr uint32_t WIDTH = 800;
 constexpr uint32_t HEIGHT = 600;
 
 
+// チュートリアル用モデル
+const std::string_view MODEL_PATH = "D:/VisualStudio/repository/BeMighty/thirdparties/models/viking_room/viking_room.obj";
+// 暫定でVulkanの textureFilename に入ってしまっている
+// const std::string_view TEXTURE_PATH = "thirdparties/models/viking_room/viking_room.png";
 
 
 // チュートリアルの三角形を描画
@@ -238,28 +235,33 @@ int main()
 
     Vulkan::Vulkan vulkan(window);
 
+    Vulkan::Model model(MODEL_PATH);
+
 
     Vulkan::VertexManager vertexManager(
         vulkan.getDevice(),
         vulkan.getRendering(),
-        {
-            // 座標、色、UV座標（1が画像のサイズ）
-            {{-0.5f, -0.5f, 0.0f}, {1.0f, 0.0f, 0.0f}, {0.0f, 0.0f}},
-            {{0.5f, -0.5f, 0.0f}, {0.0f, 1.0f, 0.0f}, {1.0f, 0.0f}},
-            {{0.5f, 0.5f, 0.0f}, {0.0f, 0.0f, 1.0f}, {1.0f, 1.0f}},
-            {{-0.5f, 0.5f, 0.0f}, {1.0f, 1.0f, 1.0f}, {0.0f, 1.0f}},
+        model.getVertices(),
+        model.getIndices()
+        
+        //{
+        //    // 座標、色、UV座標（1が画像のサイズ）
+        //    {{-0.5f, -0.5f, 0.0f}, {1.0f, 0.0f, 0.0f}, {0.0f, 0.0f}},
+        //    {{0.5f, -0.5f, 0.0f}, {0.0f, 1.0f, 0.0f}, {1.0f, 0.0f}},
+        //    {{0.5f, 0.5f, 0.0f}, {0.0f, 0.0f, 1.0f}, {1.0f, 1.0f}},
+        //    {{-0.5f, 0.5f, 0.0f}, {1.0f, 1.0f, 1.0f}, {0.0f, 1.0f}},
 
-            {{-0.5f, -0.5f, -0.5f}, {1.0f, 0.0f, 0.0f}, {0.0f, 0.0f}},
-            {{0.5f, -0.5f, -0.5f}, {0.0f, 1.0f, 0.0f}, {1.0f, 0.0f}},
-            {{0.5f, 0.5f, -0.5f}, {0.0f, 0.0f, 1.0f}, {1.0f, 1.0f}},
-            {{-0.5f, 0.5f, -0.5f}, {1.0f, 1.0f, 1.0f}, {0.0f, 1.0f}}
-        },
+        //    {{-0.5f, -0.5f, -0.5f}, {1.0f, 0.0f, 0.0f}, {0.0f, 0.0f}},
+        //    {{0.5f, -0.5f, -0.5f}, {0.0f, 1.0f, 0.0f}, {1.0f, 0.0f}},
+        //    {{0.5f, 0.5f, -0.5f}, {0.0f, 0.0f, 1.0f}, {1.0f, 1.0f}},
+        //    {{-0.5f, 0.5f, -0.5f}, {1.0f, 1.0f, 1.0f}, {0.0f, 1.0f}}
+        //},
 
-        // 頂点再利用のためのインデックス。これ自分で書くの？？？？
-        {
-            0, 1, 2, 2, 3, 0,
-            4, 5, 6, 6, 7, 4
-        }
+        //// 頂点再利用のためのインデックス。これ自分で書くの？？？？
+        //{
+        //    0, 1, 2, 2, 3, 0,
+        //    4, 5, 6, 6, 7, 4
+        //}
     );
 
     

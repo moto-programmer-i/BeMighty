@@ -12,6 +12,7 @@ export import :GraphicsPipeline;
 export import :Rendering;
 export import :Vertex;
 export import :Texture;
+export import :Model;
 
 
 
@@ -36,7 +37,8 @@ namespace Vulkan {
 
         // テクスチャを自由に読み込めるようにしたいが、
         // 今は方法が不明なのでチュートリアルからコピペ
-        static constexpr std::string_view textureFilename = "D:/VisualStudio/repository/BeMighty/textures/texture.jpg";
+        // static constexpr std::string_view textureFilename = "D:/VisualStudio/repository/BeMighty/textures/texture.jpg";
+        static constexpr std::string_view textureFilename = "D:/VisualStudio/repository/BeMighty/thirdparties/models/viking_room/viking_room.png";
 
         Vulkan(Glfw::Window& window, std::uint32_t maxFrames = Settings::DEFAULT_MAX_FRAMES_IN_FLIGHT) :
             // なぜかここで初期化しなければならない

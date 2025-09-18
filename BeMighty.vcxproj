@@ -203,6 +203,7 @@
     <ClCompile Include="vulkan\Vulkan.Image.ixx" />
     <ClCompile Include="vulkan\Vulkan.Information.ixx" />
     <ClCompile Include="vulkan\Vulkan.ixx" />
+    <ClCompile Include="vulkan\Vulkan.Model.ixx" />
     <ClCompile Include="vulkan\Vulkan.Rendering.ixx" />
     <ClCompile Include="vulkan\Vulkan.Settings.ixx" />
     <ClCompile Include="vulkan\Vulkan.SwapChain.ixx" />
