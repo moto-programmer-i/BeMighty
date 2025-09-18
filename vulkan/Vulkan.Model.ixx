@@ -67,6 +67,12 @@ namespace Vulkan {
 
                     //indices.push_back(uniqueVertices[vertex]);
 
+
+
+
+
+
+
                     // Unfortunately the attrib.vertices array is an array of float values instead of something like glm::vec3,
                     // so you need to multiply the index by 3.
                     auto vertexIndex = 3 * index.vertex_index;
@@ -75,7 +81,6 @@ namespace Vulkan {
                     // or the U and V components in the case of texture coordinates.
                     auto texcoordIndex = 2 * index.texcoord_index;
 
-                    // 構造体の初期化をちゃんと使いたい
                     Vertex vertex{
                         .pos = {
                             attrib.vertices[vertexIndex],
