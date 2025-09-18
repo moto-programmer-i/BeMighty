@@ -24,4 +24,7 @@
 	https://zenn.dev/mafafa/articles/370875167e4a3a
 	https://cpprefjp.github.io/reference/vector/vector/emplace_back.html
 
+■tinyobjectloader
+	Githubの https://github.com/tinyobjloader/tinyobjloader/blob/release/tiny_obj_loader.h
+	をそのまま取得して配置した。
 	
