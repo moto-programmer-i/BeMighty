@@ -28,9 +28,9 @@ import :Buffer;
 
 
 namespace Vulkan {
-    // この構造体名で本当に良いのか不明（2次元のpos限定なのか？）
     export struct Vertex {
         glm::vec3 pos;
+        // colorが本当に必要なのか不明、チュートリアル終えていらなそうなら削除
         glm::vec3 color;
         glm::vec2 texCoord;
 
@@ -57,10 +57,10 @@ namespace Vulkan {
         }
     };
 
-
+    // Modelに頂点は保存されているので、設計の見直しが必要
     export class VertexManager {
     public:
-        VertexManager(Device& device, Rendering& rendering, std::vector<Vertex> vertices, std::vector<std::uint32_t> indices) :
+        VertexManager(Device& device, Rendering& rendering, std::vector<Vertex>& vertices, std::vector<std::uint32_t>& indices) :
             // なぜかここで初期化しなければならない
             device(device), rendering(rendering), vertices(vertices), indices(indices)
         {
@@ -118,7 +118,9 @@ namespace Vulkan {
         }
 
         vk::IndexType getIndexType() {
-            return vk::IndexTypeValue<decltype(indices)::value_type>::value;
+            return vk::IndexTypeValue<
+                std::remove_reference<decltype(indices)>::type
+                ::value_type>::value;
         }
     private:
         Device& device;
@@ -127,8 +129,8 @@ namespace Vulkan {
         vk::raii::DeviceMemory vertexBufferMemory = nullptr;
         vk::raii::Buffer indexBuffer = nullptr;
         vk::raii::DeviceMemory indexBufferMemory = nullptr;
-        std::vector<Vertex> vertices;
-        std::vector<uint32_t> indices;
+        std::vector<Vertex>& vertices;
+        std::vector<uint32_t>& indices;
 
         void createIndexbuffer() {
             vk::DeviceSize bufferSize = sizeof(indices[0]) * indices.size();
