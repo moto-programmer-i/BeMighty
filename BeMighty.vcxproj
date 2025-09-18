@@ -101,7 +101,7 @@
       <PreprocessorDefinitions>WIN32;_DEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
       <LanguageStandard>stdcpp23</LanguageStandard>
-      <AdditionalIncludeDirectories>$(SolutionDir)libraries\glfw\include;$(VULKAN_SDK)\Include;$(SolutionDir)libraries\glm-1.0.1-light;$(SolutionDir)libraries\stb;$(SolutionDir)libraries\glfw\include;$(VULKAN_SDK)\Include;$(SolutionDir)libraries\glm;</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(SolutionDir)libraries\glfw\include;$(VULKAN_SDK)\Include;$(SolutionDir)libraries\glm-1.0.1-light;$(SolutionDir)libraries\stb;$(SolutionDir)libraries\tinyobjloader;$(SolutionDir)libraries\glfw\include;$(VULKAN_SDK)\Include;$(SolutionDir)libraries\glm;</AdditionalIncludeDirectories>
       <BuildStlModules>true</BuildStlModules>
     </ClCompile>
     <Link>
@@ -119,7 +119,7 @@
       <PreprocessorDefinitions>WIN32;NDEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
       <LanguageStandard>stdcpp23</LanguageStandard>
-      <AdditionalIncludeDirectories>$(SolutionDir)libraries\glfw\include;$(VULKAN_SDK)\Include;$(SolutionDir)libraries\glm-1.0.1-light;$(SolutionDir)libraries\stb;$(SolutionDir)libraries\glfw\include;$(VULKAN_SDK)\Include;$(SolutionDir)libraries\glm;</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(SolutionDir)libraries\glfw\include;$(VULKAN_SDK)\Include;$(SolutionDir)libraries\glm-1.0.1-light;$(SolutionDir)libraries\stb;$(SolutionDir)libraries\tinyobjloader;$(SolutionDir)libraries\glfw\include;$(VULKAN_SDK)\Include;$(SolutionDir)libraries\glm;</AdditionalIncludeDirectories>
       <BuildStlModules>true</BuildStlModules>
     </ClCompile>
     <Link>
@@ -136,7 +136,7 @@
       <ConformanceMode>true</ConformanceMode>
       <LanguageStandard>stdcpp23</LanguageStandard>
       <BuildStlModules>true</BuildStlModules>
-      <AdditionalIncludeDirectories>$(SolutionDir)libraries\glfw\include;$(VULKAN_SDK)\Include;$(SolutionDir)libraries\glm-1.0.1-light;$(SolutionDir)libraries\stb;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(SolutionDir)libraries\glfw\include;$(VULKAN_SDK)\Include;$(SolutionDir)libraries\glm-1.0.1-light;$(SolutionDir)libraries\stb;$(SolutionDir)libraries\tinyobjloader;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <AdditionalModuleDependencies>%(AdditionalModuleDependencies)</AdditionalModuleDependencies>
       <AdditionalHeaderUnitDependencies>%(AdditionalHeaderUnitDependencies)</AdditionalHeaderUnitDependencies>
     </ClCompile>
@@ -155,7 +155,7 @@
       <SDLCheck>true</SDLCheck>
       <PreprocessorDefinitions>VULKAN_HPP_NO_STRUCT_CONSTRUCTORS;NDEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
-      <AdditionalIncludeDirectories>$(SolutionDir)libraries\glfw\include;$(VULKAN_SDK)\Include;$(SolutionDir)libraries\glm-1.0.1-light;$(SolutionDir)libraries\stb;$(SolutionDir)libraries\glfw\include;$(VULKAN_SDK)\Include;$(SolutionDir)libraries\glm;$(SolutionDir)libraries\glfw\include;$(VULKAN_SDK)\Include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(SolutionDir)libraries\glfw\include;$(VULKAN_SDK)\Include;$(SolutionDir)libraries\glm-1.0.1-light;$(SolutionDir)libraries\stb;$(SolutionDir)libraries\tinyobjloader;$(SolutionDir)libraries\glfw\include;$(VULKAN_SDK)\Include;$(SolutionDir)libraries\glm;$(SolutionDir)libraries\glfw\include;$(VULKAN_SDK)\Include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <LanguageStandard>stdcpp23</LanguageStandard>
       <AdditionalHeaderUnitDependencies>%(AdditionalHeaderUnitDependencies)</AdditionalHeaderUnitDependencies>
       <BuildStlModules>true</BuildStlModules>
@@ -169,7 +169,7 @@
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='コマンドプロンプト|Win32'">
     <ClCompile>
-      <AdditionalIncludeDirectories>$(SolutionDir)libraries\glfw\include;$(VULKAN_SDK)\Include;$(SolutionDir)libraries\glm-1.0.1-light;$(SolutionDir)libraries\stb;$(SolutionDir)libraries\glfw\include;$(VULKAN_SDK)\Include;$(SolutionDir)libraries\glm;</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(SolutionDir)libraries\glfw\include;$(VULKAN_SDK)\Include;$(SolutionDir)libraries\glm-1.0.1-light;$(SolutionDir)libraries\stb;$(SolutionDir)libraries\tinyobjloader;$(SolutionDir)libraries\glfw\include;$(VULKAN_SDK)\Include;$(SolutionDir)libraries\glm;</AdditionalIncludeDirectories>
       <LanguageStandard>stdcpp23</LanguageStandard>
       <BuildStlModules>true</BuildStlModules>
     </ClCompile>
@@ -179,7 +179,7 @@
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='コマンドプロンプト|x64'">
     <ClCompile>
-      <AdditionalIncludeDirectories>$(SolutionDir)libraries\glfw\include;$(VULKAN_SDK)\Include;$(SolutionDir)libraries\glm-1.0.1-light;$(SolutionDir)libraries\stb;$(SolutionDir)libraries\glfw\include;$(VULKAN_SDK)\Include;$(SolutionDir)libraries\glm;</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(SolutionDir)libraries\glfw\include;$(VULKAN_SDK)\Include;$(SolutionDir)libraries\glm-1.0.1-light;$(SolutionDir)libraries\stb;$(SolutionDir)libraries\tinyobjloader;$(SolutionDir)libraries\glfw\include;$(VULKAN_SDK)\Include;$(SolutionDir)libraries\glm;</AdditionalIncludeDirectories>
       <LanguageStandard>stdcpp23</LanguageStandard>
       <BuildStlModules>true</BuildStlModules>
     </ClCompile>
