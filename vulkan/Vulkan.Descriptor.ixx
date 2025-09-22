@@ -98,7 +98,11 @@ namespace Vulkan {
     private:
         // GraphicsPipelineでdescriptorSetLayoutが必要なので移動
         // vk::raii::DescriptorSetLayout descriptorSetLayout = nullptr;
+
+        // Vulkanの仕様上必須なだけで、本来は不要
         vk::raii::DescriptorPool descriptorPool = nullptr;
+
+
         std::vector<vk::raii::DescriptorSet> descriptorSets;
     };
 }
