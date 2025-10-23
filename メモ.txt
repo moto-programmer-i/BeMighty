@@ -27,4 +27,6 @@
 ■tinyobjectloader
 	Githubの https://github.com/tinyobjloader/tinyobjloader/blob/release/tiny_obj_loader.h
 	をそのまま取得して配置した。
-	
+
+■BeMighty.geanyの変更を無視
+git update-index --assume-unchanged BeMighty.geany
