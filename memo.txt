@@ -1,0 +1,11 @@
+https://docs.vulkan.org/tutorial/latest/03_Drawing_a_triangle/03_Drawing/02_Rendering_and_presentation.html
+で本当に大丈夫か確認する
+
+■課題
+・vulkan.cppmビルド時にエラー（init-vulkan.sh参照）
+
+■vulkan環境設定
+source /run/media/user/linux-data/vulkan/1.4.321.1/setup-env.sh
+
+■stdmodule作成（最初に１回だけやれば良い）
+g++ -std=c++23 -fmodules -fsearch-include-path -c bits/std.cc
