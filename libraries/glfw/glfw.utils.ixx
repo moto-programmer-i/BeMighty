@@ -3,6 +3,7 @@ export module Glfw:Utils;
 import std;
 import :Structs;
 
+#define GLFW_INCLUDE_VULKAN
 #include <GLFW/glfw3.h>
 
 namespace Glfw {	

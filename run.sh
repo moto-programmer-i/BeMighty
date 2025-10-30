@@ -9,3 +9,8 @@ export LD_LIBRARY_PATH=.:$LD_LIBRARY_PATH
 
 # 実行
 ./BeMighty
+
+# デバッグ
+#gdb ./BeMighty
+# (gdb)run
+# bt

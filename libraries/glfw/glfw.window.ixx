@@ -116,6 +116,17 @@ namespace Glfw {
             // 関数は元々ポインタなので参照は不要らしい
             resizeCallbacks.emplace_back(resizeCallback);
         }
+        
+        
+        VkSurfaceKHR createWindowSurface(VkInstance instance, const VkAllocationCallbacks * allocator = nullptr) {
+			VkSurfaceKHR       surface;
+			// 戻り値の詳細
+			// https://www.glfw.org/docs/3.3/group__vulkan.html#ga1a24536bec3f80b08ead18e28e6ae965
+			if (glfwCreateWindowSurface(instance, window, allocator, &surface) != VK_SUCCESS) {
+				throw std::runtime_error("failed to create window surface!");
+			}
+			return surface;
+		}
 
         static void framebufferResizeCallback(GLFWwindow* window, int width, int height) {
             // ウィンドウ最小化の場合はwidth, heightともに0

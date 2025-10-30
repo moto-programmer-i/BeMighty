@@ -1,5 +1,5 @@
 ﻿■作業
-	
+	shaderとかやって実行確認
 
 ■未来の作業
 	glmがC++のモジュールに正式対応されたら導入
@@ -7,14 +7,7 @@
 		https://github.com/nothings/stb/tree/master?tab=readme-ov-file#stb
 
 ■できたらする
-	プロジェクトファイルがVULKAN_SDKを勝手に置き換えてしまう
-
-
-■コマンドプロンプト
-	プロジェクトのプロパティの%VULKAN_SDK%を使えたらベストだったが、方法不明
-	https://stackoverflow.com/a/5606276 を参考に設定。右クリックではなくツールバーから実行にした
-
-	バッチファイルのときだけ有効にしたい
+	Vulkanのバージョン番号の変数化
 
 ■C++
 	文字列はstring_viewで扱う
