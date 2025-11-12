@@ -1,0 +1,4 @@
+-std=c++23
+-stdlib=libc++
+-fmodule-file=std=clang/std.pcm
+-fmodule-file=vulkan_hpp=clang/vulkan_hpp.pcm

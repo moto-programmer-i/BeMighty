@@ -31,6 +31,10 @@
 *.out
 *.app
 
+# モジュールファイル
+*.gcm
+*.pcm
+
 # 出力ファイル
 BeMighty/
 x64/
@@ -47,9 +51,6 @@ x64/
 
 # outフォルダの中身を無視
 out/*
-
-# フォルダは無視しない
-!.gitkeep
 
 
 # 外部ライブラリのディレクトリ構造のみ管理
@@ -70,3 +71,6 @@ out/*
 !LICENSE.*
 !copying.txt
 !copyright
+
+# フォルダは無視しない
+!.gitkeep

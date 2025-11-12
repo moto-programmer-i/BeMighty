@@ -1,10 +1,8 @@
-﻿import std;
-import Files;
+﻿#include <iostream>
+#include <vulkan/vulkan_raii.hpp>
 
-int main()
-{
-	constexpr std::string_view filename = "/run/media/user/linux-data/repositories/BeMighty/shaders/slang.spv";
-	for (auto& line: Files::readAllLines(filename)) {
-		std::cout << line << std::endl;
-	}
+int main() {
+  int a = 2;
+  std::cout << "ok" << std::endl;
+  vk::raii::Image image = nullptr;
 }
