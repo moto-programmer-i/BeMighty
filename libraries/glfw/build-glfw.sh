@@ -15,13 +15,13 @@ cd ../../out
 
 
 # サブモジュールからコンパイル
-#g++ -std=c++23 -fmodules -fPIC -Wall -c ../libraries/glfw/glfw.window_settings.ixx
-g++ -std=c++23 -fmodules -fPIC -Wall -c ../libraries/glfw/glfw.window.ixx
-#g++ -std=c++23 -fmodules -fPIC -Wall -c ../libraries/glfw/glfw.structs.ixx
-#g++ -std=c++23 -fmodules -fPIC -Wall -c ../libraries/glfw/glfw.utils.ixx
+g++ -std=c++23 -fmodules -fPIC -Wall -c ../libraries/glfw/glfw.window_settings.cppm
+g++ -std=c++23 -fmodules -fPIC -Wall -c ../libraries/glfw/glfw.structs.cppm
+g++ -std=c++23 -fmodules -fPIC -Wall -c ../libraries/glfw/glfw.window.cppm
+g++ -std=c++23 -fmodules -fPIC -Wall -c ../libraries/glfw/glfw.utils.cppm
 
 # モジュールをコンパイル
-g++ -std=c++23 -fmodules -fPIC -Wall -c ../libraries/glfw/glfw.ixx
+g++ -std=c++23 -fmodules -fPIC -Wall -c ../libraries/glfw/glfw.cppm
 
 #動的ライブラリ作成
 g++ -std=c++23 -fmodules -shared -o Glfw.so glfw*.o
