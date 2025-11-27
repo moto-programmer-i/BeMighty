@@ -19,5 +19,7 @@ module bemighty {
 	
 	requires org.lwjgl.vulkan;
 	
+	// requires lwjgl.ex.window; 
+	
 	// requires org.joml;
 }

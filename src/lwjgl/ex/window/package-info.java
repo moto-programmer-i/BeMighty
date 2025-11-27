@@ -1,0 +1,7 @@
+/**
+ * 
+ */
+/**
+ * 
+ */
+package lwjgl.ex.window;
