@@ -6,8 +6,64 @@
 		</attributes>
 	</classpathentry>
 	<classpathentry kind="src" path="src"/>
-	<classpathentry kind="con" path="org.eclipse.jdt.USER_LIBRARY/LWJGL3">
+	<classpathentry kind="lib" path="/run/media/user/linux-data/eclipse/workspace/bemighty/thirdparties/lwjgl3/lwjgl.jar" sourcepath="/run/media/user/linux-data/eclipse/workspace/bemighty/thirdparties/lwjgl3/lwjgl-sources.jar">
 		<attributes>
+			<attribute name="javadoc_location" value="jar:file:/run/media/user/linux-data/eclipse/workspace/bemighty/thirdparties/lwjgl3/lwjgl-javadoc.jar!/"/>
+			<attribute name="module" value="true"/>
+		</attributes>
+	</classpathentry>
+	<classpathentry kind="lib" path="/run/media/user/linux-data/eclipse/workspace/bemighty/thirdparties/lwjgl3/lwjgl-assimp.jar" sourcepath="/run/media/user/linux-data/eclipse/workspace/bemighty/thirdparties/lwjgl3/lwjgl-assimp-sources.jar">
+		<attributes>
+			<attribute name="javadoc_location" value="jar:file:/run/media/user/linux-data/eclipse/workspace/bemighty/thirdparties/lwjgl3/lwjgl-assimp-javadoc.jar!/"/>
+			<attribute name="module" value="true"/>
+		</attributes>
+	</classpathentry>
+	<classpathentry kind="lib" path="/run/media/user/linux-data/eclipse/workspace/bemighty/thirdparties/lwjgl3/lwjgl-assimp-natives-linux.jar">
+		<attributes>
+			<attribute name="module" value="true"/>
+		</attributes>
+	</classpathentry>
+	<classpathentry kind="lib" path="/run/media/user/linux-data/eclipse/workspace/bemighty/thirdparties/lwjgl3/lwjgl-glfw.jar" sourcepath="/run/media/user/linux-data/eclipse/workspace/bemighty/thirdparties/lwjgl3/lwjgl-glfw-sources.jar">
+		<attributes>
+			<attribute name="javadoc_location" value="jar:file:/run/media/user/linux-data/eclipse/workspace/bemighty/thirdparties/lwjgl3/lwjgl-glfw-javadoc.jar!/"/>
+			<attribute name="module" value="true"/>
+		</attributes>
+	</classpathentry>
+	<classpathentry kind="lib" path="/run/media/user/linux-data/eclipse/workspace/bemighty/thirdparties/lwjgl3/lwjgl-glfw-natives-linux.jar">
+		<attributes>
+			<attribute name="module" value="true"/>
+		</attributes>
+	</classpathentry>
+	<classpathentry kind="lib" path="/run/media/user/linux-data/eclipse/workspace/bemighty/thirdparties/lwjgl3/lwjgl-natives-linux.jar">
+		<attributes>
+			<attribute name="module" value="true"/>
+		</attributes>
+	</classpathentry>
+	<classpathentry kind="lib" path="/run/media/user/linux-data/eclipse/workspace/bemighty/thirdparties/lwjgl3/lwjgl-openal.jar" sourcepath="/run/media/user/linux-data/eclipse/workspace/bemighty/thirdparties/lwjgl3/lwjgl-openal-sources.jar">
+		<attributes>
+			<attribute name="javadoc_location" value="jar:file:/run/media/user/linux-data/eclipse/workspace/bemighty/thirdparties/lwjgl3/lwjgl-openal-javadoc.jar!/"/>
+			<attribute name="module" value="true"/>
+		</attributes>
+	</classpathentry>
+	<classpathentry kind="lib" path="/run/media/user/linux-data/eclipse/workspace/bemighty/thirdparties/lwjgl3/lwjgl-openal-natives-linux.jar">
+		<attributes>
+			<attribute name="module" value="true"/>
+		</attributes>
+	</classpathentry>
+	<classpathentry kind="lib" path="/run/media/user/linux-data/eclipse/workspace/bemighty/thirdparties/lwjgl3/lwjgl-stb.jar" sourcepath="/run/media/user/linux-data/eclipse/workspace/bemighty/thirdparties/lwjgl3/lwjgl-stb-sources.jar">
+		<attributes>
+			<attribute name="javadoc_location" value="jar:file:/run/media/user/linux-data/eclipse/workspace/bemighty/thirdparties/lwjgl3/lwjgl-stb-javadoc.jar!/"/>
+			<attribute name="module" value="true"/>
+		</attributes>
+	</classpathentry>
+	<classpathentry kind="lib" path="/run/media/user/linux-data/eclipse/workspace/bemighty/thirdparties/lwjgl3/lwjgl-stb-natives-linux.jar">
+		<attributes>
+			<attribute name="module" value="true"/>
+		</attributes>
+	</classpathentry>
+	<classpathentry kind="lib" path="/run/media/user/linux-data/eclipse/workspace/bemighty/thirdparties/lwjgl3/lwjgl-vulkan.jar" sourcepath="/run/media/user/linux-data/eclipse/workspace/bemighty/thirdparties/lwjgl3/lwjgl-vulkan-sources.jar">
+		<attributes>
+			<attribute name="javadoc_location" value="jar:file:/run/media/user/linux-data/eclipse/workspace/bemighty/thirdparties/lwjgl3/lwjgl-vulkan-javadoc.jar!/"/>
 			<attribute name="module" value="true"/>
 		</attributes>
 	</classpathentry>

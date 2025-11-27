@@ -24,10 +24,13 @@ hs_err_pid*
 replay_pid*
 
 # フォルダの中身を無視
-thirdparty/*
+/thirdparties/**
+!/thirdparties/**/
 
 # ライセンスなどはいつでも含める
 !LICENSE.*
 !copying.txt
 !copyright
+!*_license.txt
 !.gitkeep
+!lwjgl-release-minimal-vulkan-zip.json
