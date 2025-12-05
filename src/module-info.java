@@ -1,9 +1,6 @@
 /**
  * 
  */
-/**
- * 
- */
 module bemighty {
 	requires org.lwjgl;
 	requires org.lwjgl.natives;

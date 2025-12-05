@@ -10,13 +10,13 @@ import static org.lwjgl.glfw.GLFW.*;
 import static org.lwjgl.system.MemoryStack.*;
 import static org.lwjgl.system.MemoryUtil.*;
 
-public class Window {
+public class Window implements AutoCloseable {
 
 	// The window handle
 	private long window;
 
 	public Window(WindowSettings settings) {
-		
+
 		// https://www.lwjgl.org/guide
 		// から大体コピペ
 
@@ -27,8 +27,14 @@ public class Window {
 		GLFWErrorCallback.createPrint(System.err).set();
 
 		// Initialize GLFW. Most GLFW functions will not work before doing this.
-		if (!glfwInit())
+		if (!glfwInit()) {
 			throw new IllegalStateException("Unable to initialize GLFW");
+		}
+
+		// https://github.com/lwjglgamedev/vulkanbook/blob/master/bookcontents/chapter-01/chapter-01.md
+		if (!GLFWVulkan.glfwVulkanSupported()) {
+			throw new IllegalStateException("Cannot find a compatible Vulkan installable client driver (ICD)");
+		}
 
 		// Configure GLFW
 		glfwDefaultWindowHints(); // optional, the current window hints are already the default
@@ -69,19 +75,9 @@ public class Window {
 
 		// Make the window visible
 		glfwShowWindow(window);
-
-		loop();
-
-		// Free the window callbacks and destroy the window
-		glfwFreeCallbacks(window);
-		glfwDestroyWindow(window);
-
-		// Terminate GLFW and free the error callback
-		glfwTerminate();
-		glfwSetErrorCallback(null).free();
 	}
 
-	private void loop() {
+	public void waitUntilClose() {
 		// This line is critical for LWJGL's interoperation with GLFW's
 		// OpenGL context, or any context that is managed externally.
 		// LWJGL detects the context that is current in the current thread,
@@ -97,12 +93,27 @@ public class Window {
 		while (!glfwWindowShouldClose(window)) {
 			// glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT); // clear the framebuffer
 
-			glfwSwapBuffers(window); // swap the color buffers
+			// フレームレート制限方法が不明
+			
 
 			// Poll for window events. The key callback above will only be
 			// invoked during this call.
 			glfwPollEvents();
 		}
 	}
+	
+	public void swapBuffers() {
+		glfwSwapBuffers(window);
+	}
 
+	@Override
+	public void close() throws Exception {
+		// Free the window callbacks and destroy the window
+		glfwFreeCallbacks(window);
+		glfwDestroyWindow(window);
+
+		// Terminate GLFW and free the error callback
+		glfwTerminate();
+		glfwSetErrorCallback(null).free();
+	}
 }

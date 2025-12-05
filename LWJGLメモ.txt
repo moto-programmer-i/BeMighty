@@ -1,0 +1,19 @@
+■エラー
+libVkLayer_khronos_validation.so: 共有オブジェクトファイルを開けません
+
+事前にvulkanの環境を読み込んでいないのが問題
+
+今のところコンソールから
+source /run/media/user/linux-data/vulkan/1.4.321.1/setup-env.sh
+eclipse
+
+する必要がある、よりよい方法は不明
+
+----------------------------------------------------------------------
+https://github.com/LWJGL/lwjgl3-wiki/wiki/1.3.-Memory-FAQ
+1. org.lwjgl.system.MemoryStack
+   割り当てが小さく、存続期間が短い場合に使用
+2. org.lwjgl.system.MemoryUtil
+   割り当てを追跡でき、その有効期間がわかっている場合に使用
+3. org.lwjgl.BufferUtil
+   遅いが仕方なく使うもの
