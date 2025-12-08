@@ -1,5 +1,6 @@
 package bemighty;
 
+import lwjgl.ex.vulkan.PhysicalDevice;
 import lwjgl.ex.vulkan.Vulkan;
 import lwjgl.ex.vulkan.VulkanSettings;
 import lwjgl.ex.window.Window;
@@ -25,7 +26,11 @@ public class Main {
 //			libVkLayer_khronos_validation.so: 共有オブジェクトファイルを開けません: そのようなファイルやディレクトリはありません
 			
 			try(var vulkan = new Vulkan(vulkanSettings)) {
-				
+				var devices = PhysicalDevice.getAllVkPhysicalDevice(vulkan);
+				for(var device: devices) {
+					System.out.println("デバイスの機能");
+					System.out.println(PhysicalDevice.getExtensions(device));
+				}
 			}
 			
 			window.waitUntilClose();

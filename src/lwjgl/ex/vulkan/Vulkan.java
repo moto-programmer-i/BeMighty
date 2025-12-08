@@ -149,6 +149,12 @@ public class Vulkan implements AutoCloseable {
 		};
 	}
 	
+	/**
+	 * 
+	 * @param code
+	 * @param message
+	 * @throws IllegalArgumentException codeがVK_SUCCESS以外
+	 */
 	public static void throwExceptionIfFailed(int code, String message) {
 		// VulkanがCのコードのため、失敗時に例外を投げるメソッドが必要
 		if (code == VK_SUCCESS) {
@@ -156,7 +162,7 @@ public class Vulkan implements AutoCloseable {
 		}
 		
 		System.err.println(codeToMessage(code));
-		throw new RuntimeException(message);
+		throw new IllegalArgumentException(message);
 	}
 
 	private static Set<String> getInstanceExtensions() {
@@ -228,6 +234,14 @@ public class Vulkan implements AutoCloseable {
 					return VK_FALSE;
 				});
 	}
+	
+	
+
+	public VkInstance getVkInstance() {
+		return vkInstance;
+	}
+
+
 
 	private final VkInstance vkInstance;
 	private VkDebugUtilsMessengerCreateInfoEXT debugUtils;
