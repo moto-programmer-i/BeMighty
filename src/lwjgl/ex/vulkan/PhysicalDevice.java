@@ -16,14 +16,12 @@ public class PhysicalDevice {
 
 	public PhysicalDevice(Vulkan instance) {
 
-		
-
 	}
 
 	public static List<VkPhysicalDevice> getAllVkPhysicalDevice(Vulkan vulkan) {
 		return getAllVkPhysicalDevice(vulkan, new PhysicalDeviceFilter());
 	}
-	
+
 	public static List<VkPhysicalDevice> getAllVkPhysicalDevice(Vulkan vulkan, PhysicalDeviceFilter filter) {
 		var devices = new ArrayList<VkPhysicalDevice>();
 
@@ -38,42 +36,73 @@ public class PhysicalDevice {
 			Vulkan.throwExceptionIfFailed(
 					vkEnumeratePhysicalDevices(vulkan.getVkInstance(), numDevicesBuffer, pPhysicalDevices),
 					"物理デバイスの取得に失敗しました");
-			
+
 			int capacity = pPhysicalDevices.capacity();
 			for (int i = 0; i < capacity; ++i) {
 				var device = new VkPhysicalDevice(pPhysicalDevices.get(i), vulkan.getVkInstance());
-				
+
 				// Extensionで絞り込み
 				// Featuresも似たようなことをしないといけない？
 				var supportedExtensions = getExtensions(device);
-				if(!supportedExtensions.containsAll(filter.getExtensions())) {
+				if (!supportedExtensions.containsAll(filter.getExtensions())) {
 					continue;
 				}
-				
+
+				// その他で絞り込み
+				if (filter.hasGraphicsQueueFamily()) {
+					if(!hasGraphicsQueueFamily(getQueueFamilyProperties(device))) {
+						continue;
+					}
+				}
+
 				devices.add(device);
 			}
 		}
 
 		return devices;
 	}
-	
+
 	public static Set<String> getExtensions(VkPhysicalDevice device) {
 		try (var stack = MemoryStack.stackPush()) {
 			var vkDeviceExtensionsBuffer = stack.mallocInt(1);
 			// Get device extensions
-	        Vulkan.throwExceptionIfFailed(vkEnumerateDeviceExtensionProperties(device, (String) null, vkDeviceExtensionsBuffer, null),
-	                "デバイスのVulkan拡張機能の数の取得に失敗しました");
-	        var vkDeviceExtensions = VkExtensionProperties.calloc(vkDeviceExtensionsBuffer.get(0));
-	        Vulkan.throwExceptionIfFailed(vkEnumerateDeviceExtensionProperties(device, (String) null, vkDeviceExtensionsBuffer, vkDeviceExtensions),
-	                "デバイスのVulkan拡張機能の取得に失敗しました");
-	        
-	        int numExtensions = vkDeviceExtensionsBuffer.get();
-	        var extensions = new HashSet<String>(numExtensions);
-	        for (int i = 0; i < numExtensions; i++) {
-	        	extensions.add(vkDeviceExtensions.get(i).extensionNameString());
-	        }
-	        return extensions;
-		}
-    }
+			Vulkan.throwExceptionIfFailed(
+					vkEnumerateDeviceExtensionProperties(device, (String) null, vkDeviceExtensionsBuffer, null),
+					"デバイスのVulkan拡張機能の数の取得に失敗しました");
+			var vkDeviceExtensions = VkExtensionProperties.calloc(vkDeviceExtensionsBuffer.get(0));
+			Vulkan.throwExceptionIfFailed(vkEnumerateDeviceExtensionProperties(device, (String) null,
+					vkDeviceExtensionsBuffer, vkDeviceExtensions), "デバイスのVulkan拡張機能の取得に失敗しました");
 
+			int numExtensions = vkDeviceExtensionsBuffer.get();
+			var extensions = new HashSet<String>(numExtensions);
+			for (int i = 0; i < numExtensions; i++) {
+				extensions.add(vkDeviceExtensions.get(i).extensionNameString());
+			}
+			return extensions;
+		}
+	}
+
+	public static List<VkQueueFamilyProperties> getQueueFamilyProperties(VkPhysicalDevice device) {
+		var list = new ArrayList<VkQueueFamilyProperties>();
+		try (var stack = MemoryStack.stackPush()) {
+			IntBuffer queueFamilyPropertiesBuffer = stack.mallocInt(1);
+			vkGetPhysicalDeviceQueueFamilyProperties(device, queueFamilyPropertiesBuffer, null);
+			int queueFamilyProperyCount = queueFamilyPropertiesBuffer.get(0);
+			var queueFamilyProperties = VkQueueFamilyProperties.calloc(queueFamilyProperyCount);
+			vkGetPhysicalDeviceQueueFamilyProperties(device, queueFamilyPropertiesBuffer, queueFamilyProperties);
+			for (int i = 0; i < queueFamilyProperyCount; ++i) {
+				list.add(queueFamilyProperties.get(i));
+			}
+			return list;
+		}
+	}
+	
+	public static boolean hasGraphicsQueueFamily(List<VkQueueFamilyProperties> properties) {
+		for(var property: properties) {
+			if ((property.queueFlags() & VK_QUEUE_GRAPHICS_BIT) != 0) {
+                return true;
+            }
+		}
+		return false;
+	}
 }

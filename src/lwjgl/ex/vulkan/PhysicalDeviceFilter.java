@@ -7,8 +7,10 @@ import org.lwjgl.vulkan.KHRSwapchain;
 
 public class PhysicalDeviceFilter {
 	private final Set<String> extensions;
+	/**
+	 * グラフィック機能があるか
+	 */
 	private boolean hasGraphicsQueueFamily = true;
-	// デバイスが画面に画像を表示できるかどうか
 
 	public static final Set<String> DEFAULT_EXTENSIONS;
 
@@ -26,6 +28,9 @@ public class PhysicalDeviceFilter {
 		this.extensions = extensions;
 	}
 
+	/**
+	 * グラフィック機能があるか
+	 */
 	public boolean hasGraphicsQueueFamily() {
 		return hasGraphicsQueueFamily;
 	}
