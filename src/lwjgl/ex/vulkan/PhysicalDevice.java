@@ -13,9 +13,36 @@ import java.util.*;
 import static org.lwjgl.vulkan.VK13.*;
 
 public class PhysicalDevice {
+	private final VkPhysicalDevice device;
 
-	public PhysicalDevice(Vulkan instance) {
+	/**
+	 * getFirstPhysicalDeviceから初期化
+	 * @param vulkan
+	 */
+	public PhysicalDevice(Vulkan vulkan) {
+		this(getFirstPhysicalDevice(vulkan));
+	}
+	
+	public PhysicalDevice(VkPhysicalDevice device) {
+		this.device = device;
+	}
+	
+	public static VkPhysicalDevice getFirstPhysicalDevice(Vulkan vulkan) {
+		return getAllVkPhysicalDevice(vulkan).get(0);
+	}
+	
+	public VkPhysicalDevice getDevice() {
+		return device;
+	}
 
+	/**
+	 * 条件に合う最初のデバイスを返す
+	 * @param vulkan
+	 * @param filter
+	 * @return
+	 */
+	public static VkPhysicalDevice getFirstPhysicalDevice(Vulkan vulkan, PhysicalDeviceFilter filter) {
+		return getAllVkPhysicalDevice(vulkan, filter).get(0);
 	}
 
 	public static List<VkPhysicalDevice> getAllVkPhysicalDevice(Vulkan vulkan) {
@@ -28,13 +55,13 @@ public class PhysicalDevice {
 		try (var stack = MemoryStack.stackPush()) {
 			// 物理デバイスの数を取得
 			PointerBuffer pPhysicalDevices;
-			IntBuffer numDevicesBuffer = stack.mallocInt(1);
-			Vulkan.throwExceptionIfFailed(vkEnumeratePhysicalDevices(vulkan.getVkInstance(), numDevicesBuffer, null),
+			IntBuffer deviceCountBuffer = stack.mallocInt(1);
+			Vulkan.throwExceptionIfFailed(vkEnumeratePhysicalDevices(vulkan.getVkInstance(), deviceCountBuffer, null),
 					"物理デバイスの数の取得に失敗しました");
-			int numDevices = numDevicesBuffer.get(0);
-			pPhysicalDevices = stack.mallocPointer(numDevices);
+			int deviceCount = deviceCountBuffer.get(0);
+			pPhysicalDevices = stack.mallocPointer(deviceCount);
 			Vulkan.throwExceptionIfFailed(
-					vkEnumeratePhysicalDevices(vulkan.getVkInstance(), numDevicesBuffer, pPhysicalDevices),
+					vkEnumeratePhysicalDevices(vulkan.getVkInstance(), deviceCountBuffer, pPhysicalDevices),
 					"物理デバイスの取得に失敗しました");
 
 			int capacity = pPhysicalDevices.capacity();
@@ -73,9 +100,9 @@ public class PhysicalDevice {
 			Vulkan.throwExceptionIfFailed(vkEnumerateDeviceExtensionProperties(device, (String) null,
 					vkDeviceExtensionsBuffer, vkDeviceExtensions), "デバイスのVulkan拡張機能の取得に失敗しました");
 
-			int numExtensions = vkDeviceExtensionsBuffer.get();
-			var extensions = new HashSet<String>(numExtensions);
-			for (int i = 0; i < numExtensions; i++) {
+			int extensionCount = vkDeviceExtensionsBuffer.get();
+			var extensions = new HashSet<String>(extensionCount);
+			for (int i = 0; i < extensionCount; i++) {
 				extensions.add(vkDeviceExtensions.get(i).extensionNameString());
 			}
 			return extensions;
