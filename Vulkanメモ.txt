@@ -1,0 +1,10 @@
+■QueueFamilyProperties
+https://chaosplant.tech/do/vulkan/2-3/
+GPU
+	複数のキューファミリー
+		複数のキュー
+の関係。
+
+QueueFamilyPropertiesは、1つのキューファミリーの
+全てのプロパティ（キューの個数など）
+----------------------------------------------------------------------

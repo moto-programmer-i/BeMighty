@@ -26,10 +26,15 @@ public class Main {
 //			libVkLayer_khronos_validation.so: 共有オブジェクトファイルを開けません: そのようなファイルやディレクトリはありません
 			
 			try(var vulkan = new Vulkan(vulkanSettings)) {
-				var devices = PhysicalDevice.getAllVkPhysicalDevice(vulkan);
-				for(var device: devices) {
-					System.out.println("デバイスの機能");
-					System.out.println(PhysicalDevice.getExtensions(device));
+				var vkPhysicalDevices = PhysicalDevice.getAllVkPhysicalDevice(vulkan);
+				var physicalDevice = new PhysicalDevice(vkPhysicalDevices.getFirst());
+
+				var list = physicalDevice.getQueueFamilyPropertiesList();
+				for(int i = 0; i < list.size(); ++i) {
+					System.out.println("ーーーーーーーーーーーーーーーーーーー");
+					System.out.println("キュー " + i);
+					var queue = list.get(i);
+					System.out.println("queueCount " + queue.getQueueCount());
 				}
 			}
 			

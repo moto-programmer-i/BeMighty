@@ -14,6 +14,22 @@ import static org.lwjgl.vulkan.VK13.*;
 
 public class PhysicalDevice {
 	private final VkPhysicalDevice device;
+	
+	// 実装するか未定
+	// https://github.com/lwjglgamedev/vulkanbook/blob/master/bookcontents/chapter-03/chapter-03.md
+	/*
+	vkDeviceExtensions:Bufferサポートされている拡張機能 (名前とバージョン) のリストが含まれています。
+	vkMemoryProperties: このデバイスがサポートするさまざまなメモリ ヒープに関連する情報が含まれています。
+	vkPhysicalDevice: 物理デバイス自体へのハンドル。
+	vkPhysicalDeviceFeatures: 深度クランプ、特定のタイプのシェーダーなどをサポートするかどうかなど、このデバイスでサポートされているきめ細かい機能が含まれます。
+	vkPhysicalDeviceProperties: デバイス名、ベンダー、制限などの物理デバイスのプロパティが含まれます。
+	
+	*/
+	/**
+	 * デバイスの全てのキュー（GPUの実行するコマンドを保持する待ち行列）
+	 * https://chaosplant.tech/do/vulkan/2-3/
+	 */
+	private final List<QueueFamilyProperties> queueFamilyPropertiesList = new ArrayList<QueueFamilyProperties>();
 
 	/**
 	 * getFirstPhysicalDeviceから初期化
@@ -25,14 +41,37 @@ public class PhysicalDevice {
 	
 	public PhysicalDevice(VkPhysicalDevice device) {
 		this.device = device;
-	}
-	
-	public static VkPhysicalDevice getFirstPhysicalDevice(Vulkan vulkan) {
-		return getAllVkPhysicalDevice(vulkan).get(0);
+		try (var stack = MemoryStack.stackPush()) {
+			// queueFamilyPropertiesListを初期化
+			// C++側で初期化された情報をJava側にうつす、パフォーマンスにどの程度影響するかは不明
+			IntBuffer queueFamilyPropertiesCountBuffer = stack.mallocInt(1);
+	        try(var queueFamilyPropertiesBuffer = getVkQueueFamilyPropertiesBuffer(device, queueFamilyPropertiesCountBuffer)) {
+	            int queueFamilyPropertiesCapacity = queueFamilyPropertiesBuffer.capacity();
+	            for (int i = 0; i < queueFamilyPropertiesCapacity; ++i) {
+	            	var queueFamilyProperties = queueFamilyPropertiesBuffer.get(i);
+		        	var thisQueueFamilyProperties = new QueueFamilyProperties();
+		        	
+		        	// キューの必要な情報をコピー
+		        	thisQueueFamilyProperties.setQueueCount(queueFamilyProperties.queueCount());
+		        	
+
+		        	queueFamilyPropertiesList.add(thisQueueFamilyProperties);
+	            }
+	        	
+	        }
+		}
 	}
 	
 	public VkPhysicalDevice getDevice() {
 		return device;
+	}
+
+	public List<QueueFamilyProperties> getQueueFamilyPropertiesList() {
+		return queueFamilyPropertiesList;
+	}
+	
+	public static VkPhysicalDevice getFirstPhysicalDevice(Vulkan vulkan) {
+		return getAllVkPhysicalDevice(vulkan).get(0);
 	}
 
 	/**
@@ -131,5 +170,24 @@ public class PhysicalDevice {
             }
 		}
 		return false;
+	}
+	
+	// 
+	/**
+	 * （vkGetPhysicalDeviceQueueFamilyPropertiesが２回呼ぶことが前提の意味不明の設計のため作成）
+	 * LWJGLが修正され次第削除
+	 * https://javadoc.lwjgl.org/org/lwjgl/vulkan/VK10.html#vkGetPhysicalDeviceQueueFamilyProperties(org.lwjgl.vulkan.VkPhysicalDevice,java.nio.IntBuffer,org.lwjgl.vulkan.VkQueueFamilyProperties.Buffer)
+	 * https://github.com/LWJGL/lwjgl3/blob/50f3b0e6f09012133113251dd11cc44fc2f3913f/modules/samples/src/test/java/org/lwjgl/demo/vulkan/HelloVulkan.java#L533C13-L533C53
+	 * @param physicalDevice
+	 * @param stack
+	 * @param pQueueFamilyPropertyCount
+	 * @return
+	 */
+	public static VkQueueFamilyProperties.Buffer getVkQueueFamilyPropertiesBuffer(VkPhysicalDevice physicalDevice, IntBuffer pQueueFamilyPropertyCount) {
+		// 意味不明の設計により、vkGetPhysicalDeviceQueueFamilyPropertiesを2回呼ばなければいけない
+        vkGetPhysicalDeviceQueueFamilyProperties(physicalDevice, pQueueFamilyPropertyCount, null);
+        var queueFamilyPropertiesBuffer = VkQueueFamilyProperties.malloc(pQueueFamilyPropertyCount.get(0));
+        vkGetPhysicalDeviceQueueFamilyProperties(physicalDevice, pQueueFamilyPropertyCount, queueFamilyPropertiesBuffer);
+        return queueFamilyPropertiesBuffer;
 	}
 }

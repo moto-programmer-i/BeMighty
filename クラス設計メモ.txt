@@ -1,6 +1,8 @@
 ----------------------------------------------------------------------
 ■PhysicalDevice
 Extensionを指定して取得は可能、Featureは？
+
+最適な物理デバイスの取得は未実装
 ----------------------------------------------------------------------
 ■Exception
 throwExceptionIfFailedでIllegalArgumentExceptionを投げているが
