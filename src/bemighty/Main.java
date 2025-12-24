@@ -1,5 +1,13 @@
 package bemighty;
 
+import java.util.Arrays;
+import java.util.Set;
+
+import org.lwjgl.vulkan.KHRSwapchain;
+import static org.lwjgl.vulkan.VK14.*;
+
+import lwjgl.ex.vulkan.LogicalDevice;
+import lwjgl.ex.vulkan.LogicalDeviceSettings;
 import lwjgl.ex.vulkan.PhysicalDevice;
 import lwjgl.ex.vulkan.Vulkan;
 import lwjgl.ex.vulkan.VulkanSettings;
@@ -28,17 +36,14 @@ public class Main {
 			try(var vulkan = new Vulkan(vulkanSettings)) {
 				var vkPhysicalDevices = PhysicalDevice.getAllVkPhysicalDevice(vulkan);
 				var physicalDevice = new PhysicalDevice(vkPhysicalDevices.getFirst());
-
-				var list = physicalDevice.getQueueFamilyPropertiesList();
-				for(int i = 0; i < list.size(); ++i) {
-					System.out.println("ーーーーーーーーーーーーーーーーーーー");
-					System.out.println("キュー " + i);
-					var queue = list.get(i);
-					System.out.println("queueCount " + queue.getQueueCount());
+				var logicalDeviceSettings = new LogicalDeviceSettings();
+				logicalDeviceSettings.setPhysicalDevice(physicalDevice);
+				try(var logicalDevice = new LogicalDevice(logicalDeviceSettings)) {
+					System.out.println(logicalDevice.getDevice().address());
+					
+					window.waitUntilClose();
 				}
 			}
-			
-			window.waitUntilClose();
 		}
 	}
 

@@ -10,6 +10,7 @@ import org.lwjgl.vulkan.*;
 import java.nio.IntBuffer;
 import java.util.*;
 
+import static org.lwjgl.vulkan.VK10.vkDestroyDevice;
 import static org.lwjgl.vulkan.VK13.*;
 
 public class PhysicalDevice {
@@ -30,6 +31,8 @@ public class PhysicalDevice {
 	 * https://chaosplant.tech/do/vulkan/2-3/
 	 */
 	private final List<QueueFamilyProperties> queueFamilyPropertiesList = new ArrayList<QueueFamilyProperties>();
+	
+	private OptionalInt graphicsQueueIndex = OptionalInt.empty();
 
 	/**
 	 * getFirstPhysicalDeviceから初期化
@@ -53,6 +56,12 @@ public class PhysicalDevice {
 		        	
 		        	// キューの必要な情報をコピー
 		        	thisQueueFamilyProperties.setQueueCount(queueFamilyProperties.queueCount());
+		        	thisQueueFamilyProperties.setQueueFlags(queueFamilyProperties.queueFlags());
+		        	
+		        	// グラフィックキューの位置を保存
+		        	if (graphicsQueueIndex.isEmpty() && (queueFamilyProperties.queueFlags() & VK_QUEUE_GRAPHICS_BIT) != 0) {
+		        		graphicsQueueIndex = OptionalInt.of(i);
+		            }
 		        	
 
 		        	queueFamilyPropertiesList.add(thisQueueFamilyProperties);
@@ -72,6 +81,10 @@ public class PhysicalDevice {
 	
 	public static VkPhysicalDevice getFirstPhysicalDevice(Vulkan vulkan) {
 		return getAllVkPhysicalDevice(vulkan).get(0);
+	}
+
+	public OptionalInt getGraphicsQueueIndex() {
+		return graphicsQueueIndex;
 	}
 
 	/**

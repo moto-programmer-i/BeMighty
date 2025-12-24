@@ -6,7 +6,18 @@ package lwjgl.ex.vulkan;
  */
 public class QueueFamilyProperties {
 	// 必要な情報のみ定義していく
+	
+	private int queueFlags;
 	private int queueCount;
+
+	
+	public int getQueueFlags() {
+		return queueFlags;
+	}
+
+	public void setQueueFlags(int queueFlags) {
+		this.queueFlags = queueFlags;
+	}
 
 	public int getQueueCount() {
 		return queueCount;
