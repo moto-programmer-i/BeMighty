@@ -1,9 +1,13 @@
-package lwjgl.ex.window;
+package lwjgl.ex.vulkan;
 
+import org.lwjgl.PointerBuffer;
 import org.lwjgl.glfw.*;
 import org.lwjgl.system.*;
+import org.lwjgl.vulkan.VkInstance;
 
 import java.nio.*;
+import java.util.ArrayList;
+import java.util.List;
 
 import static org.lwjgl.glfw.Callbacks.*;
 import static org.lwjgl.glfw.GLFW.*;
@@ -14,6 +18,8 @@ public class Window implements AutoCloseable {
 
 	// The window handle
 	private long window;
+	
+//	private List<Surface> surfaces = new ArrayList<>();
 
 	public Window(WindowSettings settings) {
 
@@ -37,7 +43,7 @@ public class Window implements AutoCloseable {
 		}
 
 		// Configure GLFW
-		glfwDefaultWindowHints(); // optional, the current window hints are already the default
+        glfwWindowHint(GLFW_CLIENT_API, GLFW_NO_API);
 		glfwWindowHint(GLFW_VISIBLE, GLFW_FALSE); // the window will stay hidden after creation
 		glfwWindowHint(GLFW_RESIZABLE, GLFW_TRUE); // the window will be resizable
 
@@ -68,26 +74,12 @@ public class Window implements AutoCloseable {
 			glfwSetWindowPos(window, (vidmode.width() - pWidth.get(0)) / 2, (vidmode.height() - pHeight.get(0)) / 2);
 		} // the stack frame is popped automatically
 
-		// Make the OpenGL context current
-		glfwMakeContextCurrent(window);
-		// Enable v-sync
-		glfwSwapInterval(settings.getSwapInterval());
 
 		// Make the window visible
 		glfwShowWindow(window);
 	}
 
 	public void waitUntilClose() {
-		// This line is critical for LWJGL's interoperation with GLFW's
-		// OpenGL context, or any context that is managed externally.
-		// LWJGL detects the context that is current in the current thread,
-		// creates the GLCapabilities instance and makes the OpenGL
-		// bindings available for use.
-		// GL.createCapabilities();
-
-		// Set the clear color
-		// glClearColor(1.0f, 0.0f, 0.0f, 0.0f);
-
 		// Run the rendering loop until the user has attempted to close
 		// the window or has pressed the ESCAPE key.
 		while (!glfwWindowShouldClose(window)) {
@@ -101,13 +93,16 @@ public class Window implements AutoCloseable {
 			glfwPollEvents();
 		}
 	}
-	
-	public void swapBuffers() {
-		glfwSwapBuffers(window);
-	}
 
 	@Override
 	public void close() throws Exception {
+//		// Surfaceを削除
+//		for(var surface: surfaces) {
+//			surface.close();
+//		}
+//		surfaces.clear();
+//		surfaces = null;
+		
 		// Free the window callbacks and destroy the window
 		glfwFreeCallbacks(window);
 		glfwDestroyWindow(window);
@@ -116,4 +111,36 @@ public class Window implements AutoCloseable {
 		glfwTerminate();
 		glfwSetErrorCallback(null).free();
 	}
+	
+	/**
+	 * GLFWVulkan.glfwCreateWindowSurfaceを内部で呼び出し
+	 * @param stack
+	 * @param instance
+	 * @return Surfaceのハンドラ
+	 */
+	public long createWindowSurfaceHandler(MemoryStack stack, VkInstance instance) {
+		LongBuffer SurfaceBuffer = stack.mallocLong(1);
+		Vulkan.throwExceptionIfFailed(
+				GLFWVulkan.glfwCreateWindowSurface(instance, window, null, SurfaceBuffer),
+				"GLFWVulkan.glfwCreateWindowSurfaceに失敗しました");
+        return SurfaceBuffer.get(0);
+	}
+	
+//	public Surface getSurface() {
+//		return surfaces.getFirst();
+//	}
+	
+//	/**
+//	 * 
+//	 * @return
+//	 * @throws NullPointerException GLFWVulkan.glfwGetRequiredInstanceExtensionsがnullを返した場合
+//	 */
+//	public PointerBuffer getRequiredExtensions() throws NullPointerException {
+//        PointerBuffer requiredExtensions = GLFWVulkan.glfwGetRequiredInstanceExtensions();
+//        if (requiredExtensions == null) {
+//            throw new NullPointerException("glfwGetRequiredInstanceExtensionsがnull");
+//        }
+//        return requiredExtensions;
+//    }
+	
 }

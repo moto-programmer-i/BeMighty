@@ -39,7 +39,7 @@ public class PhysicalDevice {
 	 * @param vulkan
 	 */
 	public PhysicalDevice(Vulkan vulkan) {
-		this(getFirstPhysicalDevice(vulkan));
+		this(getFirstVkPhysicalDevice(vulkan));
 	}
 	
 	public PhysicalDevice(VkPhysicalDevice device) {
@@ -79,7 +79,7 @@ public class PhysicalDevice {
 		return queueFamilyPropertiesList;
 	}
 	
-	public static VkPhysicalDevice getFirstPhysicalDevice(Vulkan vulkan) {
+	public static VkPhysicalDevice getFirstVkPhysicalDevice(Vulkan vulkan) {
 		return getAllVkPhysicalDevice(vulkan).get(0);
 	}
 
@@ -93,7 +93,7 @@ public class PhysicalDevice {
 	 * @param filter
 	 * @return
 	 */
-	public static VkPhysicalDevice getFirstPhysicalDevice(Vulkan vulkan, PhysicalDeviceFilter filter) {
+	public static VkPhysicalDevice getFirstVkPhysicalDevice(Vulkan vulkan, PhysicalDeviceFilter filter) {
 		return getAllVkPhysicalDevice(vulkan, filter).get(0);
 	}
 

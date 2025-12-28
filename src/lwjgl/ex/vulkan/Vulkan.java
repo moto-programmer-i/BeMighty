@@ -155,7 +155,7 @@ public class Vulkan implements AutoCloseable {
 	 * @param message
 	 * @throws IllegalArgumentException codeがVK_SUCCESS以外
 	 */
-	public static void throwExceptionIfFailed(int code, String message) {
+	public static void throwExceptionIfFailed(int code, String message) throws IllegalArgumentException {
 		// VulkanがCのコードのため、失敗時に例外を投げるメソッドが必要
 		if (code == VK_SUCCESS) {
 			return;

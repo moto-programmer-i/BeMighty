@@ -1,4 +1,4 @@
-package lwjgl.ex.window;
+package lwjgl.ex.vulkan;
 
 public class WindowSettings {
 	private int width;
