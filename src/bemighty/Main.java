@@ -9,6 +9,7 @@ import static org.lwjgl.vulkan.VK14.*;
 import lwjgl.ex.vulkan.LogicalDevice;
 import lwjgl.ex.vulkan.LogicalDeviceSettings;
 import lwjgl.ex.vulkan.PhysicalDevice;
+import lwjgl.ex.vulkan.Queue;
 import lwjgl.ex.vulkan.Surface;
 import lwjgl.ex.vulkan.SurfaceSettings;
 import lwjgl.ex.vulkan.Vulkan;
@@ -49,7 +50,11 @@ public class Main {
 					
 					// vulkanインスタンスclose時にまとめてcloseしていいか不明、良いならやる
 					try(var surface = new Surface(surfaceSettings)) {
-						System.out.println(surface);
+						
+						
+						Queue queue = new Queue(logicalDevice);
+						
+						System.out.println(queue);
 						window.waitUntilClose();
 					}
 				}

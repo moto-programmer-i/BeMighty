@@ -12,6 +12,7 @@ import static org.lwjgl.vulkan.VK13.*;
 import static org.lwjgl.system.MemoryUtil.*;
 
 import java.util.List;
+import java.util.OptionalInt;
 import java.util.Set;
 
 import static lwjgl.ex.vulkan.Vulkan.*;
@@ -20,9 +21,11 @@ import static lwjgl.ex.vulkan.Vulkan.*;
 // https://github.com/lwjglgamedev/vulkanbook/blob/master/booksamples/chapter-03/src/main/java/org/vulkanb/eng/graph/vk/Device.java
 
 public class LogicalDevice implements AutoCloseable {
+	private LogicalDeviceSettings settings;
 	private VkDevice device;
 
     public LogicalDevice(LogicalDeviceSettings settings) {
+    	this.settings = settings;
 
         try (var stack = MemoryStack.stackPush()) {
         	// Set<String> -> Buffer[]
@@ -55,12 +58,17 @@ public class LogicalDevice implements AutoCloseable {
 	
 	@Override
 	public void close() throws Exception {
+		settings = null;
 		if (device != null) {
 			// 論理デバイスは明示的にDestroyする必要がある
 			// The Vulkan spec states: All child objects that were created with instance or with a VkPhysicalDevice retrieved from it, and that can be destroyed or freed, must have been destroyed or freed prior to destroying instance (https://vulkan.lunarg.com/doc/view/1.4.321.1/linux/antora/spec/latest/chapters/initialization.html#VUID-vkDestroyInstance-instance-00629)
             vkDestroyDevice(device, null);
             device = null;
         }
+	}
+	
+	public OptionalInt getGraphicsQueueIndex() {
+		return settings.getPhysicalDevice().getGraphicsQueueIndex();
 	}
     
 }
