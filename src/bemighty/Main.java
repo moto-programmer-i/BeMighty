@@ -12,6 +12,8 @@ import lwjgl.ex.vulkan.PhysicalDevice;
 import lwjgl.ex.vulkan.Queue;
 import lwjgl.ex.vulkan.Surface;
 import lwjgl.ex.vulkan.SurfaceSettings;
+import lwjgl.ex.vulkan.SwapChain;
+import lwjgl.ex.vulkan.SwapChainSettings;
 import lwjgl.ex.vulkan.Vulkan;
 import lwjgl.ex.vulkan.VulkanSettings;
 import lwjgl.ex.vulkan.Window;
@@ -44,8 +46,8 @@ public class Main {
 				try(var logicalDevice = new LogicalDevice(logicalDeviceSettings)) {
 					
 					var surfaceSettings = new SurfaceSettings();
-					surfaceSettings.setVulkan(vulkan.getVkInstance());
-					surfaceSettings.setDevice(vkPhysicalDevice);
+					surfaceSettings.setVulkan(vulkan);
+					surfaceSettings.setPhysicalDevice(physicalDevice);
 					surfaceSettings.setWindow(window);
 					
 					// vulkanインスタンスclose時にまとめてcloseしていいか不明、良いならやる
@@ -54,8 +56,14 @@ public class Main {
 						
 						Queue queue = new Queue(logicalDevice);
 						
-						System.out.println(queue);
-						window.waitUntilClose();
+						var swapChainSettings = new SwapChainSettings();
+						swapChainSettings.setLogicalDevice(logicalDevice);
+						swapChainSettings.setSurface(surface);
+						swapChainSettings.setWindow(window);
+						try(SwapChain swapChain = new SwapChain(swapChainSettings)) {
+							System.out.println(swapChain);
+							window.waitUntilClose();	
+						}
 					}
 				}
 			}

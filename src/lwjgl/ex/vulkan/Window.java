@@ -3,6 +3,7 @@ package lwjgl.ex.vulkan;
 import org.lwjgl.PointerBuffer;
 import org.lwjgl.glfw.*;
 import org.lwjgl.system.*;
+import org.lwjgl.vulkan.VkExtent2D;
 import org.lwjgl.vulkan.VkInstance;
 
 import java.nio.*;
@@ -17,7 +18,7 @@ import static org.lwjgl.system.MemoryUtil.*;
 public class Window implements AutoCloseable {
 
 	// The window handle
-	private long window;
+	private final long window;
 	
 //	private List<Surface> surfaces = new ArrayList<>();
 
@@ -64,7 +65,7 @@ public class Window implements AutoCloseable {
 			IntBuffer pWidth = stack.mallocInt(1); // int*
 			IntBuffer pHeight = stack.mallocInt(1); // int*
 
-			// Get the window size passed to glfwCreateWindow
+			
 			glfwGetWindowSize(window, pWidth, pHeight);
 
 			// Get the resolution of the primary monitor
@@ -143,4 +144,13 @@ public class Window implements AutoCloseable {
 //        return requiredExtensions;
 //    }
 	
+	public VkExtent2D getSize(MemoryStack stack) {
+			IntBuffer widthBuffer = stack.mallocInt(1);
+			IntBuffer heightBuffer = stack.mallocInt(1);
+			glfwGetWindowSize(window, widthBuffer, heightBuffer);
+			var size = VkExtent2D.malloc(stack);
+			size.width(widthBuffer.get(0));
+			size.height(heightBuffer.get(0));
+			return size;
+	}
 }
