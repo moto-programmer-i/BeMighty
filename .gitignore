@@ -23,6 +23,9 @@
 hs_err_pid*
 replay_pid*
 
+# フォルダを無視
+/bin
+
 # フォルダの中身を無視
 /thirdparties/**
 !/thirdparties/**/
