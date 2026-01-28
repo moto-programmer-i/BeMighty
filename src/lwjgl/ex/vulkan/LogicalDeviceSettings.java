@@ -12,6 +12,12 @@ public class LogicalDeviceSettings {
 	private Set<String> requiredExtensions = DEFAULT_REQIRED_EXTENSIONS;
 	private float queuePriorities = DEFAULT_QUEUE_PRIORITIES;
 	
+	/**
+	 * The Vulkan spec states: The synchronization2 feature must be enabled (https://vulkan.lunarg.com/doc/view/1.4.321.1/linux/antora/spec/latest/chapters/cmdbuffers.html#VUID-vkQueueSubmit2-synchronization2-03866)
+vkResetFences(): pFences[0] (VkFence 0xb000000000b) is in use.
+	 */
+	private boolean synchronization2 = true;
+	
 	public PhysicalDevice getPhysicalDevice() {
 		return physicalDevice;
 	}
@@ -38,5 +44,11 @@ public class LogicalDeviceSettings {
 	}
 	public void setQueuePriorities(float queuePriorities) {
 		this.queuePriorities = queuePriorities;
+	}
+	public boolean isSynchronization2() {
+		return synchronization2;
+	}
+	public void setSynchronization2(boolean synchronization2) {
+		this.synchronization2 = synchronization2;
 	}
 }

@@ -1,6 +1,7 @@
 package lwjgl.ex.vulkan;
 
 public class VulkanSettings {
+	
 	public String getName() {
 		return name;
 	}
@@ -25,6 +26,9 @@ public class VulkanSettings {
 	public void setValidate(boolean validate) {
 		this.validate = validate;
 	}
+	
+	
+
 	private String name;
 	private int applicationVersion = 1;
 	private int engineVersion = 1;

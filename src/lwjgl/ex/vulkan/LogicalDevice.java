@@ -6,6 +6,9 @@ import org.lwjgl.system.MemoryStack;
 import org.lwjgl.vulkan.VkDevice;
 import org.lwjgl.vulkan.VkDeviceCreateInfo;
 import org.lwjgl.vulkan.VkDeviceQueueCreateInfo;
+import org.lwjgl.vulkan.VkPhysicalDeviceExtendedDynamicStateFeaturesEXT;
+import org.lwjgl.vulkan.VkPhysicalDeviceFeatures2;
+import org.lwjgl.vulkan.VkPhysicalDeviceVulkan13Features;
 
 import static org.lwjgl.vulkan.VK10.vkDestroyDevice;
 import static org.lwjgl.vulkan.VK13.*;
@@ -33,19 +36,39 @@ public class LogicalDevice implements AutoCloseable {
         			settings.getRequiredExtensions().stream().map(stack::UTF8).toArray(Buffer[]::new)
         			);
         	
+        	
         	// capacity 1 を指定しないと戻り値の型がBufferにならない
-        	var queueInfoBuffer = VkDeviceQueueCreateInfo.malloc(1, stack)
+        	var queueInfoBuffer = VkDeviceQueueCreateInfo.calloc(1, stack)
                     .sType$Default()
-                    .pNext(NULL)
-                    .flags(0)
                     .queueFamilyIndex(settings.getPhysicalDevice().getGraphicsQueueIndex().getAsInt())
                     .pQueuePriorities(stack.floats(settings.getQueuePriorities()));
         	
+
         	var deviceCreateInfo = VkDeviceCreateInfo.calloc(stack)
                     .sType$Default()
                     .ppEnabledExtensionNames(requiredExtensionsBuffer)
                     .pQueueCreateInfos(queueInfoBuffer);
-                    
+        	
+        	if (settings.isSynchronization2()) {
+        		// synchronization2 を有効化に必要な構造体たちを作成
+            	var extendedDynamicStateFeatures = VkPhysicalDeviceExtendedDynamicStateFeaturesEXT.calloc(stack)
+                        .sType$Default()
+                        .extendedDynamicState(true);
+            	var vulkan13Features = VkPhysicalDeviceVulkan13Features.calloc(stack)
+                        .sType$Default()
+                        .pNext(extendedDynamicStateFeatures.address())
+                        .synchronization2(settings.isSynchronization2())
+                        // 保留
+//                        .dynamicRendering(true)
+                        ;
+            	var deviceFeatures2 = VkPhysicalDeviceFeatures2.calloc(stack)
+                        .sType$Default()
+                        .pNext(vulkan13Features.address());
+
+            	deviceCreateInfo.pNext(deviceFeatures2.address());
+        	}
+        	
+        	                    
         	PointerBuffer deviceBuffer = stack.mallocPointer(1);
         	throwExceptionIfFailed(vkCreateDevice(settings.getPhysicalDevice().getDevice(), deviceCreateInfo, null, deviceBuffer),"論理デバイスの初期化に失敗しました");
             device = new VkDevice(deviceBuffer.get(0), settings.getPhysicalDevice().getDevice(), deviceCreateInfo);

@@ -16,8 +16,10 @@ import static org.lwjgl.vulkan.VK13.*;
 
 public class Vulkan implements AutoCloseable {
 	private static final String VALIDATION_LAYER = "VK_LAYER_KHRONOS_validation";
+	private VulkanSettings settings;
 
 	public Vulkan(VulkanSettings settings) {
+		this.settings = settings;
 		try (var stack = MemoryStack.stackPush()) {
 			// Create application information
 			ByteBuffer appShortName = stack.UTF8(settings.getName());
@@ -240,6 +242,12 @@ public class Vulkan implements AutoCloseable {
 	public VkInstance getVkInstance() {
 		return vkInstance;
 	}
+
+	public VulkanSettings getSettings() {
+		return settings;
+	}
+
+
 
 
 

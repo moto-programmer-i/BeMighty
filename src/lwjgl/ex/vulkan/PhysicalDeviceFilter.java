@@ -11,6 +11,9 @@ public class PhysicalDeviceFilter {
 	 * グラフィック機能があるか
 	 */
 	private boolean hasGraphicsQueueFamily = true;
+	
+	
+	private boolean synchronization2 = true;
 
 	public static final Set<String> DEFAULT_EXTENSIONS;
 
@@ -42,4 +45,18 @@ public class PhysicalDeviceFilter {
 	public Set<String> getExtensions() {
 		return extensions;
 	}
+
+	public boolean isSynchronization2() {
+		return synchronization2;
+	}
+
+	/**
+	 * Fenceを使うのに必要な同期機能があるか
+	 * The Vulkan spec states: The synchronization2 feature must be enabled (https://vulkan.lunarg.com/doc/view/1.4.321.1/linux/antora/spec/latest/chapters/cmdbuffers.html#VUID-vkQueueSubmit2-synchronization2-03866)
+vkResetFences(): pFences[0] (VkFence 0xb000000000b) is in use.
+	 */
+	public void setSynchronization2(boolean synchronization2) {
+		this.synchronization2 = synchronization2;
+	}
+	
 }

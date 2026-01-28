@@ -6,10 +6,18 @@ import java.util.Set;
 import org.lwjgl.vulkan.KHRSwapchain;
 import static org.lwjgl.vulkan.VK14.*;
 
+import lwjgl.ex.vulkan.CommandBuffer;
+import lwjgl.ex.vulkan.CommandBufferSettings;
+import lwjgl.ex.vulkan.CommandPool;
+import lwjgl.ex.vulkan.CommandPoolSettings;
+import lwjgl.ex.vulkan.FrameRender;
 import lwjgl.ex.vulkan.LogicalDevice;
 import lwjgl.ex.vulkan.LogicalDeviceSettings;
 import lwjgl.ex.vulkan.PhysicalDevice;
 import lwjgl.ex.vulkan.Queue;
+import lwjgl.ex.vulkan.QueueSettings;
+import lwjgl.ex.vulkan.Render;
+import lwjgl.ex.vulkan.RenderSettings;
 import lwjgl.ex.vulkan.Surface;
 import lwjgl.ex.vulkan.SurfaceSettings;
 import lwjgl.ex.vulkan.SwapChain;
@@ -53,16 +61,34 @@ public class Main {
 					// vulkanインスタンスclose時にまとめてcloseしていいか不明、良いならやる
 					try(var surface = new Surface(surfaceSettings)) {
 						
-						
-						Queue queue = new Queue(logicalDevice);
+						var settings = new QueueSettings();
+						settings.setLogicalDevice(logicalDevice);
+						Queue queue = new Queue(settings);
 						
 						var swapChainSettings = new SwapChainSettings();
 						swapChainSettings.setLogicalDevice(logicalDevice);
 						swapChainSettings.setSurface(surface);
 						swapChainSettings.setWindow(window);
-						try(SwapChain swapChain = new SwapChain(swapChainSettings)) {
-							System.out.println(swapChain);
-							window.waitUntilClose();	
+						try(var swapChain = new SwapChain(swapChainSettings)) {
+							
+							var renderSettings = new RenderSettings();
+							renderSettings.setLogicalDevice(logicalDevice);
+							renderSettings.setSwapChain(swapChain);
+							renderSettings.setQueue(queue);
+							
+							
+							
+							try(var render = new Render(renderSettings)) {
+								
+								final int testCount = 3;
+								for(int i = 0; i < testCount; ++i) {
+									render.render((stack, tempSwapChain) -> {
+										System.out.println(swapChain);
+									});
+								}
+								
+								window.waitUntilClose();
+							}
 						}
 					}
 				}

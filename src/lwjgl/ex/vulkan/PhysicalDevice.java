@@ -121,11 +121,34 @@ public class PhysicalDevice {
 				var device = new VkPhysicalDevice(pPhysicalDevices.get(i), vulkan.getVkInstance());
 
 				// Extensionで絞り込み
-				// Featuresも似たようなことをしないといけない？
 				var supportedExtensions = getExtensions(device);
 				if (!supportedExtensions.containsAll(filter.getExtensions())) {
 					continue;
 				}
+				
+				// Featuresで絞り込み
+				if(filter.isSynchronization2()) {
+					// 機能をチェックするのに各構造体を作らなければならない
+					var queryExtendedDynamicStateFeatures = VkPhysicalDeviceExtendedDynamicStateFeaturesEXT.calloc(stack)
+			                .sType$Default();
+					var queryVulkan13Features = VkPhysicalDeviceVulkan13Features.calloc(stack)
+			                .sType$Default()
+			                .pNext(queryExtendedDynamicStateFeatures.address());
+					var queryDeviceFeatures2 = VkPhysicalDeviceFeatures2.calloc(stack)
+			                .sType$Default()
+			                .pNext(queryVulkan13Features.address());
+		            vkGetPhysicalDeviceFeatures2(device, queryDeviceFeatures2);
+
+			            // 保留
+//			            if (!query_vulkan13_features.dynamicRendering()) {
+//			                throw new RuntimeException("Dynamic Rendering feature is missing");
+//			            }
+			            if (!queryVulkan13Features.synchronization2()) {
+			                // GPUに同期機能（Synchronization2）がない
+			            	continue;
+			            }
+				}
+				 
 
 				// その他で絞り込み
 				if (filter.hasGraphicsQueueFamily()) {

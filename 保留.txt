@@ -1,1 +1,5 @@
+できないか試したい
+//		try(gpuCompleted;cpuSync;commandBuffer;commandPool) {};
+
+
 描画の確認が取れ次第、リサイズのためSwapchain周りを修正
