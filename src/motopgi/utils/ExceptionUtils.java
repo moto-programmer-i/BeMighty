@@ -16,6 +16,9 @@ public final class ExceptionUtils {
 		// それぞれcloseして例外をまとめて投げる
 		var exception = new Exception("closeに失敗しました");
 		for(var e: array) {
+			if (e == null) {
+				continue;
+			}
 			try {
 				e.close();
 			} catch (Exception ex) {
