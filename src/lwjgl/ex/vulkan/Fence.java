@@ -9,11 +9,32 @@ import static org.lwjgl.vulkan.VK14.*;
 // 参考
 // https://github.com/lwjglgamedev/vulkanbook/blob/master/booksamples/chapter-05/src/main/java/org/vulkanb/eng/graph/vk/Fence.java
 
+//// Fence仕様確認
+//long timeoutNanoseconds = 2000_000_000;
+//try(var fence0 = new Fence(logicalDevice)) {
+//	Runnable r = () -> {
+//		try(var stack = MemoryStack.stackPush()) {
+//			Thread.sleep(timeoutNanoseconds / 2000_000);
+//			var submitInfo = VkSubmitInfo2.calloc(1, stack)
+//    				.sType$Default();
+//			Vulkan.throwExceptionIfFailed(vkQueueSubmit2(queue.getVkQueue(), submitInfo, fence0.getHandler()), "Queueへのコマンドの送信に失敗しました");
+//			System.out.println("signal");
+//		} catch (InterruptedException e) {
+//			e.printStackTrace();
+//		}									
+//	};
+//	r.run();
+//	fence0.startWaiting(timeoutNanoseconds);
+//	System.out.println(fence0);
+//}
+
+
 /**
  * CPU側の同期のための待機機構
  * https://chaosplant.tech/do/vulkan/ex2/
  */
 public class Fence implements AutoCloseable {
+	public static final long DEFAULT_TIMEOUT_NANOSECONDS = Long.MAX_VALUE;
 	private final long handler;
 	private final LogicalDevice logicalDevice;
 	
@@ -31,23 +52,35 @@ public class Fence implements AutoCloseable {
         }
 	}
 
-// vkWaitForFencesは内部で勝手に呼ばれる？
-//	/**
-//	 * 同期待ちに入る（waitがObjectのメソッドであり、オーバーライドになってしまう）
-//	 */
-//	public void startWaiting() {
-//        // 引数waitAllは、LWJGLの設計ミス。本来複数ハンドラを送る場合に、1つでも完了したら待機終了とするときに使う
-//        Vulkan.throwExceptionIfFailed(vkWaitForFences(logicalDevice.getDevice(), handler, true, Long.MAX_VALUE)
-//        		, "Fenceの待機開始に失敗しました");
-//	}
+	/**
+	 * 同期待ちに入る（waitがObjectのメソッドであり、オーバーライドになってしまう）
+	 * startWaitingでCPU同期待ちに入り、
+	 * 別スレッドでvkQueueSubmit2などでsignal状態になると終了する
+	 */
+	public void startWaiting() {
+		startWaiting(DEFAULT_TIMEOUT_NANOSECONDS);
+	}
+	public void startWaiting(long timeoutNanoseconds) {
+        // 引数waitAllは、LWJGLの設計ミス。本来複数ハンドラを送る場合に、1つでも完了したら待機終了とするときに使う
+        Vulkan.throwExceptionIfFailed(vkWaitForFences(logicalDevice.getDevice(), handler, true, timeoutNanoseconds)
+        		, "Fenceの待機開始に失敗しました");
+	}
 	
 	public void reset() {
 		Vulkan.throwExceptionIfFailed(vkResetFences(logicalDevice.getDevice(), handler)
 				, "Fenceのリセットに失敗しました");
 	}
+	
+	public void waitAndReset() {
+		// 同期待ちが終了したら、リセットして戻す
+		startWaiting();
+		reset();
+	}
 
 	@Override
 	public void close() throws Exception {
+		// 最後のFenceがvkDestroyFenceできない。他の実装が間違ってることが原因？
+		// vkDestroyFence(): can't be called on VkFence 0xa000000000a that is currently in use by VkQueue 0x7f91f89f2b50.
 		vkDestroyFence(logicalDevice.getDevice(), handler, null);
 	}
 

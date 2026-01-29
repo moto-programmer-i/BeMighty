@@ -12,22 +12,22 @@ import org.lwjgl.vulkan.VkSubmitInfo2;
  */
 public class FrameRender implements AutoCloseable {
 	private final RenderSettings settings;
-	private final CommandPool commandPool;
-	private final CommandBuffer commandBuffer;
 	private final Fence cpuSync;
 	private final Semaphore gpuCompleted;
+	private final CommandPool commandPool;
+	private final CommandBuffer commandBuffer;
 
 	public FrameRender(RenderSettings settings) {
 		this.settings = settings;
 		// AutoCloseableを変数として持つのでtry-with-resourcesができない
+		cpuSync = new Fence(settings.getLogicalDevice());
+		gpuCompleted = new Semaphore(settings.getLogicalDevice());
 		commandPool = new CommandPool(settings.getCommandPoolSettings());
 		
 		// commandPoolを変えなければいけないのでcloneが必要
 		var commandBufferSettings = settings.getCommandBufferSettings().clone();
 		commandBufferSettings.setCommandPool(commandPool);
 		commandBuffer = new CommandBuffer(commandBufferSettings);
-		cpuSync = new Fence(settings.getLogicalDevice());
-		gpuCompleted = new Semaphore(settings.getLogicalDevice());
 
 //		try(var pool = new CommandPool(settings.getCommandPoolSettings());
 //				var poolB = new CommandPool(settings.getCommandPoolSettings())
@@ -53,12 +53,9 @@ public class FrameRender implements AutoCloseable {
 			 */
 
         try (var stack = MemoryStack.stackPush()) {
-//        	vkResetFences(): pFences[0] (VkFence 0xb000000000b) is in use.
-//        	The Vulkan spec states: Each element of pFences must not be currently associated with any queue command that has not yet completed execution on that queue (https://vulkan.lunarg.com/doc/view/1.4.321.1/linux/antora/spec/latest/chapters/synchronization.html#VUID-vkResetFences-pFences-01123)
-//        	l
-        	// 前の処理の待機を終了
+        	// 前の処理を待機
         	if (waiting != null) {
-        		waiting.cpuSync.reset();
+        		waiting.cpuSync.waitAndReset();
         	} 
         	
         	// コマンドを記録
@@ -88,7 +85,7 @@ public class FrameRender implements AutoCloseable {
 //		try(gpuCompleted;cpuSync;commandBuffer;commandPool) {};
 		
 		// 生成した順に書けば、Java側が逆順に解放してくれる
-		try(commandPool;commandBuffer;cpuSync;gpuCompleted) {}
+		try(cpuSync;gpuCompleted;commandPool;commandBuffer) {}
 	}
 
 	public static FrameRender[] createArray(int length, RenderSettings settings) {

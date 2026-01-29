@@ -3,13 +3,18 @@ package bemighty;
 import java.util.Arrays;
 import java.util.Set;
 
+import org.lwjgl.system.MemoryStack;
 import org.lwjgl.vulkan.KHRSwapchain;
+import org.lwjgl.vulkan.VkSubmitInfo2;
+
+import static org.lwjgl.vulkan.VK13.vkQueueSubmit2;
 import static org.lwjgl.vulkan.VK14.*;
 
 import lwjgl.ex.vulkan.CommandBuffer;
 import lwjgl.ex.vulkan.CommandBufferSettings;
 import lwjgl.ex.vulkan.CommandPool;
 import lwjgl.ex.vulkan.CommandPoolSettings;
+import lwjgl.ex.vulkan.Fence;
 import lwjgl.ex.vulkan.FrameRender;
 import lwjgl.ex.vulkan.LogicalDevice;
 import lwjgl.ex.vulkan.LogicalDeviceSettings;
@@ -76,7 +81,7 @@ public class Main {
 							renderSettings.setSwapChain(swapChain);
 							renderSettings.setQueue(queue);
 							
-							
+
 							
 							try(var render = new Render(renderSettings)) {
 								
