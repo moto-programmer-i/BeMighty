@@ -2,14 +2,10 @@ package lwjgl.ex.vulkan;
 
 import static org.lwjgl.vulkan.VK13.vkQueueSubmit2;
 
-import java.util.ArrayList;
 import java.util.Arrays;
-
 import org.lwjgl.system.MemoryStack;
-import org.lwjgl.vulkan.VkCommandBufferSubmitInfo;
 import org.lwjgl.vulkan.VkSubmitInfo2;
 
-import motopgi.utils.ExceptionUtils;
 
 /**
  * 1フレームを描画するのに必要なクラス群
@@ -57,9 +53,9 @@ public class FrameRender implements AutoCloseable {
 			 */
 
         try (var stack = MemoryStack.stackPush()) {
-        	vkResetFences(): pFences[0] (VkFence 0xb000000000b) is in use.
-        	The Vulkan spec states: Each element of pFences must not be currently associated with any queue command that has not yet completed execution on that queue (https://vulkan.lunarg.com/doc/view/1.4.321.1/linux/antora/spec/latest/chapters/synchronization.html#VUID-vkResetFences-pFences-01123)
-        	l
+//        	vkResetFences(): pFences[0] (VkFence 0xb000000000b) is in use.
+//        	The Vulkan spec states: Each element of pFences must not be currently associated with any queue command that has not yet completed execution on that queue (https://vulkan.lunarg.com/doc/view/1.4.321.1/linux/antora/spec/latest/chapters/synchronization.html#VUID-vkResetFences-pFences-01123)
+//        	l
         	// 前の処理の待機を終了
         	if (waiting != null) {
         		waiting.cpuSync.reset();
@@ -88,11 +84,11 @@ public class FrameRender implements AutoCloseable {
 	
 	@Override
 	public void close() throws Exception {
-		// さすがに無理だった？2回closeされるっぽい
+//		// Java側も逆順に解放するので、これだと解放順が逆になってしまう
 //		try(gpuCompleted;cpuSync;commandBuffer;commandPool) {};
 		
-		// 生成した順と逆順でcloseしていく
-		ExceptionUtils.close(gpuCompleted, cpuSync, commandBuffer, commandPool);
+		// 生成した順に書けば、Java側が逆順に解放してくれる
+		try(commandPool;commandBuffer;cpuSync;gpuCompleted) {}
 	}
 
 	public static FrameRender[] createArray(int length, RenderSettings settings) {

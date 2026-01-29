@@ -8,7 +8,7 @@ public final class ExceptionUtils {
 	}
 	
 	/**
-	 * まとめてcloseする
+	 * まとめてcloseする（配列はtry-with-resources対象外のため）
 	 * @param array
 	 * @throws Exception 各closeで発生した例外をまとめたもの
 	 */
